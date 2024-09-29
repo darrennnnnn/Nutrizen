@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Nunito } from "next/font/google";
+import { Lexend } from "next/font/google";
 
-const space = Nunito({
+const space = Lexend({
     subsets: ["latin"],
     weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });

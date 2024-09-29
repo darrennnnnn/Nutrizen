@@ -1,7 +1,4 @@
-interface CalorieIntakeSummaryProps {
-    current: number;
-    target: number;
-}
+import { CalorieIntakeSummaryProps } from "@/lib/types";
 
 export default function CalorieIntakeSummary({
     current,

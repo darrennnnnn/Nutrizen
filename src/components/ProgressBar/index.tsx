@@ -1,11 +1,8 @@
-interface ProgressProps {
-    value: number;
-    color: string;
-}
+import { ProgressProps } from "@/lib/types";
 
 export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
-    const radius = 20; // Radius of the circle
-    const strokeWidth = 4; // Thickness of the circle
+    const radius = 20;
+    const strokeWidth = 4;
     const normalizedRadius = radius - strokeWidth * 0.5;
     const circumference = 2 * Math.PI * normalizedRadius;
     const strokeDashoffset = circumference - (value / 100) * circumference;
@@ -17,9 +14,8 @@ export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
                 width={radius * 2}
                 className="rotate-[-90deg]"
             >
-                {/* Background gray circle (for remaining part) */}
                 <circle
-                    stroke="#d3d3d3" // Light gray color
+                    stroke="#d3d3d3"
                     fill="transparent"
                     strokeWidth={strokeWidth}
                     r={normalizedRadius}
@@ -27,7 +23,6 @@ export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
                     cy={radius}
                 />
 
-                {/* Foreground red circle (for progress part) */}
                 <circle
                     stroke={color}
                     fill="transparent"
