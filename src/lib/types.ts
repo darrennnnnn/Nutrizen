@@ -17,6 +17,7 @@ export interface DashboardProps {
     currentCalories: number;
     targetCalories: number;
     foodData: NutritionInfo[];
+    coins: number;
 }
 
 export interface NutrientProgressProps {

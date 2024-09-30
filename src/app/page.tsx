@@ -134,9 +134,10 @@ export default function Home() {
     return (
         <div className="h-screen flex flex-col">
             <Dashboard
-                currentCalories={totalCalories}
+                currentCalories={2300}
                 targetCalories={2500}
                 foodData={foodData}
+                coins={32}
             />
             <Menubar onImageCapture={handleImageCapture} />
 
