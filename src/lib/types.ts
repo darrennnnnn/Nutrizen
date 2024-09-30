@@ -15,9 +15,31 @@ export interface MenubarProps {
 
 export interface DashboardProps {
     currentCalories: number;
+    currentProteins: number;
+    currentFat: number;
+    currentCarbs: number;
+    currentFiber: number;
+
     targetCalories: number;
+    targetProteins: number;
+    targetFat: number;
+    targetCarbs: number;
+    targetFiber: number;
+
     foodData: NutritionInfo[];
     coins: number;
+}
+
+export interface NutrientSummaryProps {
+    currentProteins: number;
+    currentFat: number;
+    currentCarbs: number;
+    currentFiber: number;
+
+    targetProteins: number;
+    targetFat: number;
+    targetCarbs: number;
+    targetFiber: number;
 }
 
 export interface NutrientProgressProps {

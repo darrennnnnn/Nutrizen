@@ -6,14 +6,14 @@ export default function CalorieIntakeSummary({
     current,
     target,
 }: Readonly<CalorieIntakeSummaryProps>) {
-    const percentage = Math.min(100, (current / target) * 100);
+    const percentage = Math.min(100, (1200 / target) * 100); //ganti jadi current
     const strokeWidth = 20;
     const radius = 80;
     const circumference = Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     return (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center pb-2">
             <div className="relative w-full pb-[60%]">
                 <svg
                     className="absolute top-0 left-0 w-full h-full"
@@ -30,7 +30,7 @@ export default function CalorieIntakeSummary({
                     <path
                         d="M20,100 A80,80 0 1,1 180,100"
                         fill="none"
-                        stroke="#4CAF50"
+                        stroke="#2ECC71"
                         strokeWidth={strokeWidth}
                         strokeDasharray={circumference}
                         strokeDashoffset={strokeDashoffset}
@@ -42,16 +42,16 @@ export default function CalorieIntakeSummary({
                         textAnchor="middle"
                         fontSize="36"
                         fontWeight="bold"
-                        fill="#4a4a4a"
+                        fill="#14532D"
                     >
                         {current}
                     </text>
                     <text
                         x="100"
-                        y="115"
+                        y="105"
                         textAnchor="middle"
-                        fontSize="14"
-                        fill="#888"
+                        fontSize="12"
+                        fill="#9E9E9E"
                     >
                         of {target} cal
                     </text>

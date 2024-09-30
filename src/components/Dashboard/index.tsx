@@ -3,18 +3,21 @@ import { Smile } from "lucide-react";
 import CalorieIntakeSummary from "./CalorieIntakeSummary";
 import NutrientSummary from "./NutrientSummary";
 import { DashboardProps } from "@/lib/types";
-import { FaHatCowboy } from "react-icons/fa6";
-import { TbChefHat } from "react-icons/tb";
-import { FaRedhat } from "react-icons/fa";
-import { FaCoins } from "react-icons/fa"; // Import coin icon
+import { FaCoins } from "react-icons/fa";
 
 export default function Dashboard({
     currentCalories,
+    currentProteins,
+    currentFat,
+    currentCarbs,
+    currentFiber,
     targetCalories,
-    foodData,
-    coins = 0, // Add coins prop with a default value
+    targetProteins,
+    targetFat,
+    targetCarbs,
+    targetFiber,
+    coins,
 }: Readonly<DashboardProps>) {
-    console.log(foodData);
     return (
         <div className="flex-grow overflow-y-auto m-3 flex flex-col justify-end items-center relative">
             {/* Coin Badge */}
@@ -30,7 +33,16 @@ export default function Dashboard({
                 current={currentCalories}
                 target={targetCalories}
             />
-            {/* <NutrientSummary /> */}
+            <NutrientSummary
+                currentProteins={currentProteins}
+                currentFat={currentFat}
+                currentCarbs={currentCarbs}
+                currentFiber={currentFiber}
+                targetProteins={targetProteins}
+                targetFat={targetFat}
+                targetCarbs={targetCarbs}
+                targetFiber={targetFiber}
+            />
         </div>
     );
 }

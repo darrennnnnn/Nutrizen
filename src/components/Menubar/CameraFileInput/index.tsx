@@ -82,7 +82,7 @@ export default function CameraFileInput({
             />
             <button
                 onClick={handleCameraClick}
-                className="p-3 bg-black text-white rounded-full hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                className="p-3 bg-[#14532D] text-white rounded-full hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
                 <Camera className="w-6 h-6" />
             </button>

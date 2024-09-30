@@ -15,13 +15,31 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { Pencil, Settings } from "lucide-react";
+import CameraFileInput from "@/components/Menubar/CameraFileInput";
 
 export default function Home() {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<NutritionInfo[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [currentCalories, setCurrentCalories] = useState(0);
+    const [currentProteins, setCurrentProteins] = useState(0);
+    const [currentFat, setCurrentFat] = useState(0);
+    const [currentCarbs, setCurrentCarbs] = useState(0);
+    const [currentFibers, setCurrentFibers] = useState(0);
 
     const [totalCalories, setTotalCalories] = useState(0);
     const [totalProteins, setTotalProteins] = useState(0);
@@ -60,7 +78,6 @@ export default function Home() {
     }, [foodData]);
 
     const handleImageCapture = (imageUrl: string, file: File) => {
-        setSelectedFile(file);
         setPreview(imageUrl);
         setIsDialogOpen(true);
         setLoading(true);
@@ -123,6 +140,18 @@ export default function Home() {
 
     const handleConfirm = () => {
         setIsDialogOpen(false);
+        setCurrentCalories((prev) => prev + totalCalories);
+        setCurrentProteins((prev) => prev + totalProteins);
+        setCurrentFat((prev) => prev + totalFat);
+        setCurrentCarbs((prev) => prev + totalCarbs);
+        setCurrentFibers((prev) => prev + totalFibers);
+
+        setFoodData([]);
+        setTotalCalories(0);
+        setTotalProteins(0);
+        setTotalFat(0);
+        setTotalCarbs(0);
+        setTotalFibers(0);
     };
 
     const alertDialogMessage = loading
@@ -134,12 +163,63 @@ export default function Home() {
     return (
         <div className="h-screen flex flex-col">
             <Dashboard
-                currentCalories={2300}
+                currentCalories={currentCalories}
+                currentProteins={currentProteins}
+                currentFat={currentFat}
+                currentCarbs={currentCarbs}
+                currentFiber={currentFibers}
                 targetCalories={2500}
+                targetProteins={55}
+                targetFat={30}
+                targetCarbs={300}
+                targetFiber={30}
                 foodData={foodData}
                 coins={32}
             />
-            <Menubar onImageCapture={handleImageCapture} />
+            <div className="w-full flex items-center justify-around py-2">
+                <Drawer>
+                    <DrawerTrigger className="p-3">
+                        {" "}
+                        <Settings />
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle>Configure Your Intakes</DrawerTitle>
+                            <DrawerDescription>
+                                This action will reset your current intakes.
+                            </DrawerDescription>
+                        </DrawerHeader>
+                        <DrawerFooter>
+                            <Button>Submit</Button>
+                            <DrawerClose>
+                                <Button variant="outline">Cancel</Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+                <CameraFileInput onImageCapture={handleImageCapture} />
+
+                <Drawer>
+                    <DrawerTrigger className=" p-3">
+                        {" "}
+                        <Pencil />
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle>Configure Your Intakes</DrawerTitle>
+                            <DrawerDescription>
+                                This action will reset your current intakes.
+                            </DrawerDescription>
+                        </DrawerHeader>
+                        <DrawerFooter>
+                            <Button>Submit</Button>
+                            <DrawerClose>
+                                <Button variant="outline">Cancel</Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+            </div>
 
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <AlertDialogContent className="max-h-[80vh] overflow-y-auto">

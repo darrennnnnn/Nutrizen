@@ -15,7 +15,7 @@ export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
                 className="rotate-[-90deg]"
             >
                 <circle
-                    stroke="#d3d3d3"
+                    stroke="#e6e6e6"
                     fill="transparent"
                     strokeWidth={strokeWidth}
                     r={normalizedRadius}
@@ -36,7 +36,7 @@ export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
                 />
             </svg>
             <div className="absolute text-center">
-                <span className="text-xs font-bold">{value}%</span>
+                <span className="text-xs font-bold text-[#14532D]">{value}%</span>
             </div>
         </div>
     );
