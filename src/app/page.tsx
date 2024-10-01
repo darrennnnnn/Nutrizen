@@ -34,6 +34,7 @@ export default function Home() {
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<NutritionInfo[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const [targetCalories, setTargetCalories] = useState(2500);
@@ -53,6 +54,14 @@ export default function Home() {
     const [totalFat, setTotalFat] = useState(0);
     const [totalCarbs, setTotalCarbs] = useState(0);
     const [totalFibers, setTotalFibers] = useState(0);
+
+    const [tempTargets, setTempTargets] = useState({
+        proteins: targetProteins,
+        carbs: targetCarbs,
+        fat: targetFat,
+        fiber: targetFiber,
+        calories: targetCalories,
+    });
 
     const resetIntakes = () => {
         setCurrentCalories(0);
@@ -206,46 +215,34 @@ export default function Home() {
     };
 
     const handleNutrientChange = (nutrient: string, value: number) => {
-        switch (nutrient) {
-            case "proteins":
-                setTargetProteins(value);
-                break;
-            case "carbs":
-                setTargetCarbs(value);
-                break;
-            case "fat":
-                setTargetFat(value);
-                break;
-            case "fiber":
-                setTargetFiber(value);
-                break;
-        }
+        setTempTargets((prev) => ({
+            ...prev,
+            [nutrient]: value,
+        }));
 
         // Recalculate calories if protein, carbs, or fat changes
         if (["proteins", "carbs", "fat"].includes(nutrient)) {
             const newProteins =
-                nutrient === "proteins" ? value : targetProteins;
-            const newCarbs = nutrient === "carbs" ? value : targetCarbs;
-            const newFat = nutrient === "fat" ? value : targetFat;
+                nutrient === "proteins" ? value : tempTargets.proteins;
+            const newCarbs = nutrient === "carbs" ? value : tempTargets.carbs;
+            const newFat = nutrient === "fat" ? value : tempTargets.fat;
             const newCalories = calculateCalories(
                 newProteins,
                 newCarbs,
                 newFat
             );
-            setTargetCalories(newCalories);
+            setTempTargets((prev) => ({ ...prev, calories: newCalories }));
         }
     };
 
     const handleSettingsSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Save the new target values (you would typically save these to a backend or local storage)
-        console.log("New targets set:", {
-            targetCalories,
-            targetProteins,
-            targetFat,
-            targetCarbs,
-            targetFiber,
-        });
+        // Update the actual target values with the temporary ones
+        setTargetProteins(tempTargets.proteins);
+        setTargetCarbs(tempTargets.carbs);
+        setTargetFat(tempTargets.fat);
+        setTargetFiber(tempTargets.fiber);
+        setTargetCalories(tempTargets.calories);
 
         // Reset intakes only when saving changes
         resetIntakes();
@@ -300,7 +297,7 @@ export default function Home() {
                                         id="targetCalories"
                                         className="text-3xl font-extrabold text-[#14532D]"
                                     >
-                                        {Math.round(targetCalories)}
+                                        {Math.round(tempTargets.calories)}
                                     </p>
                                 </div>
                                 <div className="space-y-2">
@@ -310,7 +307,7 @@ export default function Home() {
                                     <Input
                                         id="targetProteins"
                                         type="number"
-                                        value={targetProteins}
+                                        value={tempTargets.proteins}
                                         onChange={(e) =>
                                             handleNutrientChange(
                                                 "proteins",
@@ -326,7 +323,7 @@ export default function Home() {
                                     <Input
                                         id="targetCarbs"
                                         type="number"
-                                        value={targetCarbs}
+                                        value={tempTargets.carbs}
                                         onChange={(e) =>
                                             handleNutrientChange(
                                                 "carbs",
@@ -340,7 +337,7 @@ export default function Home() {
                                     <Input
                                         id="targetFat"
                                         type="number"
-                                        value={targetFat}
+                                        value={tempTargets.fat}
                                         onChange={(e) =>
                                             handleNutrientChange(
                                                 "fat",
@@ -356,7 +353,7 @@ export default function Home() {
                                     <Input
                                         id="targetFiber"
                                         type="number"
-                                        value={targetFiber}
+                                        value={tempTargets.fiber}
                                         onChange={(e) =>
                                             handleNutrientChange(
                                                 "fiber",
@@ -394,15 +391,13 @@ export default function Home() {
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader>
-                            <DrawerTitle>Configure Your Intakes</DrawerTitle>
-                            <DrawerDescription>
-                                This action will reset your current intakes.
-                            </DrawerDescription>
+                            <DrawerTitle>🚧</DrawerTitle>
+                            <DrawerDescription>🚧</DrawerDescription>
                         </DrawerHeader>
                         <DrawerFooter>
-                            <Button>Submit</Button>
+                            <Button>🚧</Button>
                             <DrawerClose>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline">🚧</Button>
                             </DrawerClose>
                         </DrawerFooter>
                     </DrawerContent>
