@@ -1,11 +1,32 @@
-import React, { ChangeEvent, useRef } from "react";
-import { Camera } from "lucide-react";
+import React, { ChangeEvent, useRef, useState } from "react";
+import { Plus, Camera, FilePen } from "lucide-react";
 import { CameraFileInputProps } from "@/lib/types";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function CameraFileInput({
     onImageCapture,
+    onManualInput,
 }: Readonly<CameraFileInputProps>) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showOptions, setShowOptions] = useState(false);
+    const [showManualInputDialog, setShowManualInputDialog] = useState(false);
+    const [manualInput, setManualInput] = useState({
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+        fiber: 0,
+    });
 
     const resizeImage = (
         file: File,
@@ -21,7 +42,6 @@ export default function CameraFileInput({
                     const canvas = document.createElement("canvas");
                     let width = img.width;
                     let height = img.height;
-
                     if (width > height) {
                         if (width > maxWidth) {
                             height *= maxWidth / width;
@@ -33,7 +53,6 @@ export default function CameraFileInput({
                             height = maxHeight;
                         }
                     }
-
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext("2d");
@@ -68,10 +87,31 @@ export default function CameraFileInput({
         }
     };
 
-    const handleCameraClick = () => fileInputRef.current?.click();
+    const handlePlusClick = () => setShowOptions(!showOptions);
+    const handleCameraClick = () => {
+        fileInputRef.current?.click();
+        setShowOptions(false);
+    };
+    const handleFilePenClick = () => {
+        setShowManualInputDialog(true);
+        setShowOptions(false);
+    };
+
+    const handleManualInputChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, value } = e.target;
+        setManualInput((prev) => ({ ...prev, [name]: parseFloat(value) || 0 }));
+    };
+
+    const handleManualInputSubmit = () => {
+        onManualInput(manualInput);
+        setShowManualInputDialog(false);
+        setManualInput({ protein: 0, carbs: 0, fat: 0, fiber: 0 });
+    };
 
     return (
-        <>
+        <div className="relative">
             <input
                 ref={fileInputRef}
                 type="file"
@@ -81,11 +121,88 @@ export default function CameraFileInput({
                 className="hidden"
             />
             <button
-                onClick={handleCameraClick}
-                className="p-3 bg-[#14532D] text-white rounded-full hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                onClick={handlePlusClick}
+                className="p-3 bg-[#14532D] text-white rounded-full hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out"
             >
-                <Camera className="w-6 h-6" />
+                <Plus
+                    className={`w-7 h-7 transition-transform duration-300 ${
+                        showOptions ? "rotate-45" : ""
+                    }`}
+                />
             </button>
-        </>
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 flex space-x-2">
+                <button
+                    onClick={handleCameraClick}
+                    className={`p-2 bg-[#14532D] text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out ${
+                        showOptions
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4 pointer-events-none"
+                    }`}
+                >
+                    <Camera className="w-6 h-6" />
+                </button>
+                <button
+                    onClick={handleFilePenClick}
+                    className={`p-2 bg-[#14532D] text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out ${
+                        showOptions
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4 pointer-events-none"
+                    }`}
+                >
+                    <FilePen className="w-6 h-6" />
+                </button>
+            </div>
+
+            <AlertDialog
+                open={showManualInputDialog}
+                onOpenChange={setShowManualInputDialog}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Manual Nutrient Input
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Enter the nutritional information manually:
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="grid grid-cols-2 gap-4">
+                        {["protein", "carbs", "fat", "fiber"].map(
+                            (nutrient) => (
+                                <div
+                                    key={nutrient}
+                                    className="flex flex-col space-y-2"
+                                >
+                                    <Label htmlFor={nutrient}>
+                                        {nutrient.charAt(0).toUpperCase() +
+                                            nutrient.slice(1)}{" "}
+                                        (g)
+                                    </Label>
+                                    <Input
+                                        id={nutrient}
+                                        name={nutrient}
+                                        type="number"
+                                        min="0"
+                                        step="0.1"
+                                        value={
+                                            manualInput[
+                                                nutrient as keyof typeof manualInput
+                                            ]
+                                        }
+                                        onChange={handleManualInputChange}
+                                    />
+                                </div>
+                            )
+                        )}
+                    </div>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleManualInputSubmit}>
+                            Submit
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </div>
     );
 }

@@ -7,6 +7,12 @@ export interface ProgressProps {
 
 export interface CameraFileInputProps {
     onImageCapture: (imageUrl: string, file: File) => void;
+    onManualInput: (data: {
+        protein: number;
+        carbs: number;
+        fat: number;
+        fiber: number;
+    }) => void;
 }
 
 export interface MenubarProps {

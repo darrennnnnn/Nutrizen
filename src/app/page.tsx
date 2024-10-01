@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Dashboard from "@/components/Dashboard";
-import Menubar from "@/components/Menubar";
 import { FoodApiResponse, NutritionInfo } from "@/lib/types";
 import {
     AlertDialog,
@@ -28,12 +27,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, Settings } from "lucide-react";
 import CameraFileInput from "@/components/Menubar/CameraFileInput";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<NutritionInfo[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [targetCalories, setTargetCalories] = useState(2500);
+    const [targetProteins, setTargetProteins] = useState(55);
+    const [targetFat, setTargetFat] = useState(30);
+    const [targetCarbs, setTargetCarbs] = useState(300);
+    const [targetFiber, setTargetFiber] = useState(30);
 
     const [currentCalories, setCurrentCalories] = useState(0);
     const [currentProteins, setCurrentProteins] = useState(0);
@@ -46,6 +53,14 @@ export default function Home() {
     const [totalFat, setTotalFat] = useState(0);
     const [totalCarbs, setTotalCarbs] = useState(0);
     const [totalFibers, setTotalFibers] = useState(0);
+
+    const resetIntakes = () => {
+        setCurrentCalories(0);
+        setCurrentProteins(0);
+        setCurrentFat(0);
+        setCurrentCarbs(0);
+        setCurrentFibers(0);
+    };
 
     useEffect(() => {
         if (foodData.length > 0) {
@@ -82,6 +97,34 @@ export default function Home() {
         setIsDialogOpen(true);
         setLoading(true);
         fetchFoodData(file);
+    };
+
+    const handleManualInput = (data: {
+        protein: number;
+        carbs: number;
+        fat: number;
+        fiber: number;
+    }) => {
+        const calories = data.protein * 4 + data.carbs * 4 + data.fat * 9; // Rough estimation
+
+        setCurrentCalories((prev) => prev + calories);
+        setCurrentProteins((prev) => prev + data.protein);
+        setCurrentFat((prev) => prev + data.fat);
+        setCurrentCarbs((prev) => prev + data.carbs);
+        setCurrentFibers((prev) => prev + data.fiber);
+
+        // Create a new NutritionInfo object for the manually entered data
+        const manualNutritionInfo: NutritionInfo = {
+            name: "Manual Entry",
+            calories: Math.round(calories),
+            proteins: data.protein,
+            carbs: data.carbs,
+            fiber: data.fiber,
+            fat: data.fat,
+        };
+
+        // Add the manual entry to the foodData array
+        setFoodData((prev) => [...prev, manualNutritionInfo]);
     };
 
     const fetchFoodData = async (file: File) => {
@@ -154,6 +197,61 @@ export default function Home() {
         setTotalFibers(0);
     };
 
+    const calculateCalories = (
+        proteins: number,
+        carbs: number,
+        fat: number
+    ) => {
+        return proteins * 4 + carbs * 4 + fat * 9;
+    };
+
+    const handleNutrientChange = (nutrient: string, value: number) => {
+        switch (nutrient) {
+            case "proteins":
+                setTargetProteins(value);
+                break;
+            case "carbs":
+                setTargetCarbs(value);
+                break;
+            case "fat":
+                setTargetFat(value);
+                break;
+            case "fiber":
+                setTargetFiber(value);
+                break;
+        }
+
+        // Recalculate calories if protein, carbs, or fat changes
+        if (["proteins", "carbs", "fat"].includes(nutrient)) {
+            const newProteins =
+                nutrient === "proteins" ? value : targetProteins;
+            const newCarbs = nutrient === "carbs" ? value : targetCarbs;
+            const newFat = nutrient === "fat" ? value : targetFat;
+            const newCalories = calculateCalories(
+                newProteins,
+                newCarbs,
+                newFat
+            );
+            setTargetCalories(newCalories);
+        }
+    };
+
+    const handleSettingsSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Save the new target values (you would typically save these to a backend or local storage)
+        console.log("New targets set:", {
+            targetCalories,
+            targetProteins,
+            targetFat,
+            targetCarbs,
+            targetFiber,
+        });
+
+        // Reset intakes only when saving changes
+        resetIntakes();
+        setIsDrawerOpen(false);
+    };
+
     const alertDialogMessage = loading
         ? "Please wait while we analyze your food..."
         : foodData.length > 0
@@ -168,37 +266,127 @@ export default function Home() {
                 currentFat={currentFat}
                 currentCarbs={currentCarbs}
                 currentFiber={currentFibers}
-                targetCalories={2500}
-                targetProteins={55}
-                targetFat={30}
-                targetCarbs={300}
-                targetFiber={30}
+                targetCalories={targetCalories}
+                targetProteins={targetProteins}
+                targetFat={targetFat}
+                targetCarbs={targetCarbs}
+                targetFiber={targetFiber}
                 foodData={foodData}
                 coins={32}
             />
             <div className="w-full flex items-center justify-around py-2">
+                {/* settings change intakes */}
                 <Drawer>
                     <DrawerTrigger className="p-3">
-                        {" "}
                         <Settings />
                     </DrawerTrigger>
                     <DrawerContent>
-                        <DrawerHeader>
-                            <DrawerTitle>Configure Your Intakes</DrawerTitle>
-                            <DrawerDescription>
-                                This action will reset your current intakes.
-                            </DrawerDescription>
-                        </DrawerHeader>
-                        <DrawerFooter>
-                            <Button>Submit</Button>
-                            <DrawerClose>
-                                <Button variant="outline">Cancel</Button>
-                            </DrawerClose>
-                        </DrawerFooter>
+                        <form onSubmit={handleSettingsSubmit}>
+                            <DrawerHeader>
+                                <DrawerTitle>
+                                    Configure Your Targets
+                                </DrawerTitle>
+                                <DrawerDescription>
+                                    Set your daily nutritional targets here.
+                                    Calories are automatically calculated.
+                                </DrawerDescription>
+                            </DrawerHeader>
+                            <div className="p-4 space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="targetCalories">
+                                        Calories (calculated)
+                                    </Label>
+                                    <p
+                                        id="targetCalories"
+                                        className="text-3xl font-extrabold text-[#14532D]"
+                                    >
+                                        {Math.round(targetCalories)}
+                                    </p>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="targetProteins">
+                                        Proteins (g)
+                                    </Label>
+                                    <Input
+                                        id="targetProteins"
+                                        type="number"
+                                        value={targetProteins}
+                                        onChange={(e) =>
+                                            handleNutrientChange(
+                                                "proteins",
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="targetCarbs">
+                                        Carbs (g)
+                                    </Label>
+                                    <Input
+                                        id="targetCarbs"
+                                        type="number"
+                                        value={targetCarbs}
+                                        onChange={(e) =>
+                                            handleNutrientChange(
+                                                "carbs",
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="targetFat">Fat (g)</Label>
+                                    <Input
+                                        id="targetFat"
+                                        type="number"
+                                        value={targetFat}
+                                        onChange={(e) =>
+                                            handleNutrientChange(
+                                                "fat",
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="targetFiber">
+                                        Fiber (g)
+                                    </Label>
+                                    <Input
+                                        id="targetFiber"
+                                        type="number"
+                                        value={targetFiber}
+                                        onChange={(e) =>
+                                            handleNutrientChange(
+                                                "fiber",
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <DrawerFooter>
+                                <DrawerClose>
+                                    <p className="text-sm text-yellow-600 font-medium mb-4">
+                                        Warning: Saving changes will reset your
+                                        current intakes for the day to 0.
+                                    </p>
+                                    <Button type="submit" className="w-full">
+                                        Save Changes
+                                    </Button>
+                                </DrawerClose>
+                            </DrawerFooter>
+                        </form>
                     </DrawerContent>
                 </Drawer>
-                <CameraFileInput onImageCapture={handleImageCapture} />
+                {/* input */}
+                <CameraFileInput
+                    onImageCapture={handleImageCapture}
+                    onManualInput={handleManualInput}
+                />
 
+                {/* edit character */}
                 <Drawer>
                     <DrawerTrigger className=" p-3">
                         {" "}

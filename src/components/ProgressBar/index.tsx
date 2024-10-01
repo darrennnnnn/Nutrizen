@@ -5,7 +5,9 @@ export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
     const strokeWidth = 4;
     const normalizedRadius = radius - strokeWidth * 0.5;
     const circumference = 2 * Math.PI * normalizedRadius;
-    const strokeDashoffset = circumference - (value / 100) * circumference;
+    const cappedValue = Math.min(value, 100);
+    const strokeDashoffset =
+        circumference - (cappedValue / 100) * circumference;
 
     return (
         <div className="relative flex justify-center items-center">
@@ -36,7 +38,9 @@ export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
                 />
             </svg>
             <div className="absolute text-center">
-                <span className="text-xs font-bold text-[#14532D]">{value}%</span>
+                <span className="text-xs font-bold text-[#14532D]">
+                    {value > 100 ? `${value.toFixed(0)}%` : `${cappedValue}%`}
+                </span>
             </div>
         </div>
     );

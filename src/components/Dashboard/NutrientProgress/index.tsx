@@ -15,7 +15,7 @@ export default function NutrientProgress({
                 color={color}
             />
             <p className="text-xs font-semibold text-[#9E9E9E]">
-                {current}/{target}
+                {Math.round(current)}/{target}g
             </p>
         </div>
     );

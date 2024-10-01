@@ -6,7 +6,7 @@ export default function CalorieIntakeSummary({
     current,
     target,
 }: Readonly<CalorieIntakeSummaryProps>) {
-    const percentage = Math.min(100, (1200 / target) * 100); //ganti jadi current
+    const percentage = Math.min(100, (current / target) * 100); //ganti jadi current
     const strokeWidth = 20;
     const radius = 80;
     const circumference = Math.PI * radius;
