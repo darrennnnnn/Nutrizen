@@ -22,21 +22,17 @@ export default function ShopDrawer({
         <Drawer open={isOpen} onOpenChange={onClose}>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>Configure Your Targets</DrawerTitle>
-                    <DrawerDescription>
-                        Set your daily nutritional targets here. Calories are
-                        automatically calculated.
-                    </DrawerDescription>
+                    <DrawerTitle>🚨Coming Soon!🚨</DrawerTitle>
+                    <DrawerDescription>🚧🚧🚧🚧🚧</DrawerDescription>
                 </DrawerHeader>
 
                 <DrawerFooter>
                     <DrawerClose>
                         <p className="text-sm text-yellow-600 font-medium mb-4">
-                            Warning: Saving changes will reset your current
-                            intakes for the day to 0.
+                            🚧🚧🚧🚧🚧
                         </p>
                         <Button type="submit" className="w-full">
-                            Save Changes
+                            🚧🚧🚧🚧🚧
                         </Button>
                     </DrawerClose>
                 </DrawerFooter>

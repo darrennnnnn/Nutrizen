@@ -112,10 +112,12 @@ export default function CameraFileInput({
     };
 
     const handlePlusClick = () => setShowOptions(!showOptions);
+
     const handleCameraClick = () => {
         fileInputRef.current?.click();
         setShowOptions(false);
     };
+    
     const handleFilePenClick = () => {
         setShowManualInputDialog(true);
         setShowOptions(false);

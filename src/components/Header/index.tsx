@@ -1,4 +1,3 @@
-import React from "react";
 import { FaCoins } from "react-icons/fa";
 
 interface HeaderProps {

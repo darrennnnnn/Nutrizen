@@ -1,4 +1,3 @@
-import React from "react";
 import { Settings, Store } from "lucide-react";
 import CameraFileInput from "../CameraFileInput";
 

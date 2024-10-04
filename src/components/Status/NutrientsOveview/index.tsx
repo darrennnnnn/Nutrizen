@@ -1,4 +1,3 @@
-import React from "react";
 import NutrientProgress from "./NutrientProgressBar";
 
 interface NutrientsOverviewProps {

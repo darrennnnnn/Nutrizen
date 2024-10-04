@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import {
     AlertDialog,
@@ -35,15 +34,19 @@ export default function FoodAnalysisDialog({
     loading,
     onConfirm,
 }: Readonly<FoodAnalysisDialogProps>) {
-    const alertDialogMessage = loading
-        ? "Please wait while we analyze your food..."
-        : foodData.length > 0
-        ? "Please review the captured food and its nutritional information."
-        : "No items detected. Please try again.";
+    let alertDialogMessage;
+    if (loading) {
+        alertDialogMessage = "Please wait while we analyze your food...";
+    } else if (foodData.length > 0) {
+        alertDialogMessage =
+            "Please review the captured food and its nutritional information.";
+    } else {
+        alertDialogMessage = "No items detected. Please try again.";
+    }
 
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
-            <AlertDialogContent className="max-h-[80vh] overflow-y-auto">
+            <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
                 <AlertDialogHeader>
                     <AlertDialogTitle>
                         {loading ? "Analyzing Food" : "Confirm Food"}

@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Header from "../components/Header";
-import CaloriesOverview from "@/components/CaloriesOverview";
-import NutrientsOverview from "@/components/NutrientsOveview";
+import CaloriesOverview from "@/components/Status/CaloriesOverview";
+import NutrientsOverview from "@/components/Status/NutrientsOveview";
 import Footer from "@/components/Footer";
 import FoodAnalysisDialog from "@/components/FoodAnalysisDialog";
 import SettingsDrawer from "@/components/SettingsDrawer";
@@ -47,6 +47,7 @@ export default function Home() {
         setPreview(imageUrl);
         setIsDialogOpen(true);
         setLoading(true);
+        setFoodData([]);
         fetchFoodData(file);
     };
 

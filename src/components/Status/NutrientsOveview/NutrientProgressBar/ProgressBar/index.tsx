@@ -1,4 +1,7 @@
-import { ProgressProps } from "@/lib/types";
+interface ProgressProps {
+    value: number;
+    color: string;
+}
 
 export default function ProgressBar({ value, color }: Readonly<ProgressProps>) {
     const radius = 20;
