@@ -1,7 +1,7 @@
 import { NutrientProgressProps } from "@/lib/types";
-import ProgressBar from "../../ProgressBar";
+import ProgressBar from "./ProgressBar";
 
-export default function NutrientProgress({
+export default function NutrientProgressBar({
     name,
     current,
     target,

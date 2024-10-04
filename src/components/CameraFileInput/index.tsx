@@ -1,6 +1,5 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { useRef, useState, ChangeEvent } from "react";
 import { Plus, Camera, FilePen } from "lucide-react";
-import { CameraFileInputProps } from "@/lib/types";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -14,6 +13,18 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
+interface NutrientInput {
+    protein: number;
+    carbs: number;
+    fat: number;
+    fiber: number;
+}
+
+interface CameraFileInputProps {
+    onImageCapture: (imageUrl: string, file: File) => void;
+    onManualInput: (data: NutrientInput) => void;
+}
+
 export default function CameraFileInput({
     onImageCapture,
     onManualInput,
@@ -21,7 +32,7 @@ export default function CameraFileInput({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [showOptions, setShowOptions] = useState(false);
     const [showManualInputDialog, setShowManualInputDialog] = useState(false);
-    const [manualInput, setManualInput] = useState({
+    const [manualInput, setManualInput] = useState<NutrientInput>({
         protein: 0,
         carbs: 0,
         fat: 0,
@@ -36,43 +47,56 @@ export default function CameraFileInput({
     ): Promise<Blob> => {
         return new Promise((resolve) => {
             const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > height) {
-                        if (width > maxWidth) {
-                            height *= maxWidth / width;
-                            width = maxWidth;
-                        }
-                    } else {
-                        if (height > maxHeight) {
-                            width *= maxHeight / height;
-                            height = maxHeight;
-                        }
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext("2d");
-                    ctx?.drawImage(img, 0, 0, width, height);
-                    canvas.toBlob(
-                        (blob) => {
-                            resolve(blob as Blob);
-                        },
-                        "image/jpeg",
-                        quality
-                    );
-                };
-                img.src = e.target?.result as string;
-            };
+            reader.onload = handleReaderLoad(resolve, maxWidth, maxHeight, quality);
             reader.readAsDataURL(file);
         });
     };
 
+    const handleReaderLoad = (
+        resolve: (value: Blob | PromiseLike<Blob>) => void,
+        maxWidth: number,
+        maxHeight: number,
+        quality: number
+    ) => (e: ProgressEvent<FileReader>) => {
+        const img = new Image();
+        img.onload = handleImageLoad(resolve, img, maxWidth, maxHeight, quality);
+        img.src = e.target?.result as string;
+    };
+
+    const handleImageLoad = (
+        resolve: (value: Blob | PromiseLike<Blob>) => void,
+        img: HTMLImageElement,
+        maxWidth: number,
+        maxHeight: number,
+        quality: number
+    ) => () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+            if (width > maxWidth) {
+                height *= maxWidth / width;
+                width = maxWidth;
+            }
+        } else if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+            (blob) => {
+                if (blob) resolve(blob);
+            },
+            "image/jpeg",
+            quality
+        );
+    };
+
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0] || null;
+        const file = event.target.files?.[0];
         if (file) {
             try {
                 const resizedBlob = await resizeImage(file, 1200, 1200, 0.7);
@@ -97,9 +121,7 @@ export default function CameraFileInput({
         setShowOptions(false);
     };
 
-    const handleManualInputChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleManualInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setManualInput((prev) => ({ ...prev, [name]: parseFloat(value) || 0 }));
     };
@@ -167,7 +189,7 @@ export default function CameraFileInput({
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="grid grid-cols-2 gap-4">
-                        {["protein", "carbs", "fat", "fiber"].map(
+                        {(["protein", "carbs", "fat", "fiber"] as const).map(
                             (nutrient) => (
                                 <div
                                     key={nutrient}
@@ -184,11 +206,7 @@ export default function CameraFileInput({
                                         type="number"
                                         min="0"
                                         step="0.1"
-                                        value={
-                                            manualInput[
-                                                nutrient as keyof typeof manualInput
-                                            ]
-                                        }
+                                        value={manualInput[nutrient]}
                                         onChange={handleManualInputChange}
                                     />
                                 </div>
