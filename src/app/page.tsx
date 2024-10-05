@@ -9,6 +9,7 @@ import FoodAnalysisDialog from "@/components/Footer/FoodAnalysisDialog";
 import SettingsDrawer from "@/components/Footer/SettingsDrawer";
 import { FoodApiResponse } from "@/lib/types";
 import ShopDrawer from "@/components/Footer/ShopDrawer";
+import UserProfileDrawer from "@/components/Footer/UserProfileDrawer";
 
 export default function Home() {
     const [currentIntake, setCurrentIntake] = useState({
@@ -30,6 +31,9 @@ export default function Home() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
     const [isShopDrawerOpen, setIsShopDrawerOpen] = useState(false);
+    const [isUserProfileDrawerOpen, setIsUserProfileDrawerOpen] =
+        useState(false);
+
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<
         {
@@ -175,6 +179,7 @@ export default function Home() {
             <Footer
                 onSettingsClick={() => setIsSettingsDrawerOpen(true)}
                 onShopClick={() => setIsShopDrawerOpen(true)}
+                onProfileClick={() => setIsUserProfileDrawerOpen(true)}
                 onImageCapture={handleImageCapture}
                 onManualInput={handleManualInput}
             />
@@ -195,6 +200,10 @@ export default function Home() {
             <ShopDrawer
                 isOpen={isShopDrawerOpen}
                 onClose={() => setIsShopDrawerOpen(false)}
+            />
+            <UserProfileDrawer
+                isOpen={isUserProfileDrawerOpen}
+                onClose={() => setIsUserProfileDrawerOpen(false)}
             />
         </div>
     );
