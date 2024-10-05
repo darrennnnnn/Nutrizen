@@ -1,5 +1,5 @@
 import { Settings, Store } from "lucide-react";
-import CameraFileInput from "../CameraFileInput";
+import CameraFileInput from "./CameraFileInput";
 
 interface FooterProps {
     onSettingsClick: () => void;

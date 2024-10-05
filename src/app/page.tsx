@@ -5,10 +5,10 @@ import Header from "../components/Header";
 import CaloriesOverview from "@/components/Status/CaloriesOverview";
 import NutrientsOverview from "@/components/Status/NutrientsOveview";
 import Footer from "@/components/Footer";
-import FoodAnalysisDialog from "@/components/FoodAnalysisDialog";
-import SettingsDrawer from "@/components/SettingsDrawer";
+import FoodAnalysisDialog from "@/components/Footer/FoodAnalysisDialog";
+import SettingsDrawer from "@/components/Footer/SettingsDrawer";
 import { FoodApiResponse } from "@/lib/types";
-import ShopDrawer from "@/components/ShopDrawer";
+import ShopDrawer from "@/components/Footer/ShopDrawer";
 
 export default function Home() {
     const [currentIntake, setCurrentIntake] = useState({
