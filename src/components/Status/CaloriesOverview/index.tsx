@@ -30,7 +30,7 @@ export default function CaloriesOverview({
                         <path
                             d="M20,100 A80,80 0 1,1 180,100"
                             fill="none"
-                            stroke="#e6e6e6"
+                            stroke="#F0EDE3"
                             strokeWidth={strokeWidth}
                             strokeLinecap="butt"
                         />

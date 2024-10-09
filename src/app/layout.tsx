@@ -20,7 +20,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${space.className} bg-[#E8F5E9]`}
+                className={`${space.className} bg-gradient-to-b from-lime-100 to-emerald-100`}
             >
                 {children}
             </body>

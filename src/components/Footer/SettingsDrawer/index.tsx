@@ -64,7 +64,7 @@ export default function SettingsDrawer({
 
     return (
         <Drawer open={isOpen} onOpenChange={onClose}>
-            <DrawerContent>
+            <DrawerContent className="bg-lime-100">
                 <form onSubmit={handleSettingsSubmit}>
                     <DrawerHeader>
                         <DrawerTitle>Configure Your Targets</DrawerTitle>
@@ -99,6 +99,7 @@ export default function SettingsDrawer({
                                         (g)
                                     </Label>
                                     <Input
+                                    className="bg-lime-50"
                                         id={`target${
                                             nutrient.charAt(0).toUpperCase() +
                                             nutrient.slice(1)
@@ -118,11 +119,11 @@ export default function SettingsDrawer({
                     </div>
                     <DrawerFooter>
                         <DrawerClose>
-                            <p className="text-sm text-yellow-600 font-medium mb-4">
+                            <p className="text-sm text-red-600 font-medium mb-4">
                                 Warning: Saving changes will reset your current
                                 intakes for the day to 0.
                             </p>
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full bg-orange-950">
                                 Save Changes
                             </Button>
                         </DrawerClose>

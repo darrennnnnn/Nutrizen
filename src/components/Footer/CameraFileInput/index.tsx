@@ -146,7 +146,7 @@ export default function CameraFileInput({
             />
             <button
                 onClick={handlePlusClick}
-                className="p-3 bg-[#14532D] text-white rounded-full hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out"
+                className={`p-3 ${showOptions ? "bg-green-950": "bg-[#14532D]"}  text-white rounded-full transition-all duration-300 ease-in-out`}
             >
                 <Plus
                     className={`w-7 h-7 transition-transform duration-300 ${
@@ -157,7 +157,7 @@ export default function CameraFileInput({
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 flex space-x-2">
                 <button
                     onClick={handleCameraClick}
-                    className={`p-2 bg-[#14532D] text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out ${
+                    className={`p-2 bg-[#14532D] text-white rounded-full transition-all duration-300 ease-in-out ${
                         showOptions
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-4 pointer-events-none"
