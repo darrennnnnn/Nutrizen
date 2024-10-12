@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FaGithub } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import React from "react";
+import { SignInButton } from "@/components/Auth/signin-button";
 
 export default function LoginPage() {
     return (
@@ -29,13 +30,7 @@ export default function LoginPage() {
                         <FaGoogle size={20} />
                         <p>Sign Up using Google</p>
                     </Button>
-                    <Button
-                        size={"lg"}
-                        className="bg-orange-950 flex items-center justify-center gap-2"
-                    >
-                        <FaGithub size={20} />
-                        <p>Sign Up using GitHub</p>
-                    </Button>
+                    <SignInButton />
                 </div>
             </div>
         </div>

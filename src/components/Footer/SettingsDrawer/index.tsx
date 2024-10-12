@@ -64,7 +64,7 @@ export default function SettingsDrawer({
 
     return (
         <Drawer open={isOpen} onOpenChange={onClose}>
-            <DrawerContent className="bg-lime-100">
+            <DrawerContent className="bg-gradient-to-t from-emerald-100 to-lime-100">
                 <form onSubmit={handleSettingsSubmit}>
                     <DrawerHeader>
                         <DrawerTitle>Configure Your Targets</DrawerTitle>
