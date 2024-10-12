@@ -20,7 +20,7 @@ export default function CaloriesOverview({
             <div className="relative flex-grow flex justify-center items-center pt-28">
                 <Smile size={250} />
             </div>
-            <div className="w-full flex flex-col items-center pb-2">
+            <div className="max-w-screen-sm w-full flex flex-col items-center pb-2">
                 <div className="relative w-full pb-[60%]">
                     <svg
                         className="absolute top-0 left-0 w-full h-full"
