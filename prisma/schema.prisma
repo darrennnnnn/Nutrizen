@@ -9,18 +9,44 @@ generator client {
 }
 
 model User {
-    id            String          @id @default(cuid())
+    id            String    @id @default(cuid())
     name          String?
-    email         String          @unique
+    email         String    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
-    // Optional for WebAuthn support
+
+    coins         Int      @default(0)
+    currentIntake Intake?
+    target        Targets?
+
     Authenticator Authenticator[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model Intake {
+    id       String @id @default(cuid())
+    userId   String @unique
+    calories Int    @default(0)
+    proteins Int    @default(0)
+    carbs    Int    @default(0)
+    fat      Int    @default(0)
+    fiber    Int    @default(0)
+    user     User   @relation(fields: [userId], references: [id])
+}
+
+model Targets {
+    id       String @id @default(cuid())
+    userId   String @unique
+    calories Int    @default(2500)
+    proteins Int    @default(55)
+    carbs    Int    @default(300)
+    fat      Int    @default(70)
+    fiber    Int    @default(30)
+    user     User   @relation(fields: [userId], references: [id])
 }
 
 model Account {

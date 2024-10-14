@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import CaloriesOverview from "@/components/Status/CaloriesOverview";
 import NutrientsOverview from "@/components/Status/NutrientsOveview";
@@ -10,8 +10,10 @@ import SettingsDrawer from "@/components/Footer/SettingsDrawer";
 import { FoodApiResponse } from "@/lib/types";
 import ShopDrawer from "@/components/Footer/ShopDrawer";
 import UserProfileDrawer from "@/components/Footer/UserProfileDrawer";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+    const { data: session } = useSession();
     const [currentIntake, setCurrentIntake] = useState({
         calories: 0,
         proteins: 0,
@@ -28,6 +30,7 @@ export default function Home() {
         fiber: 30,
     });
 
+    const [coins, setCoins] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
     const [isShopDrawerOpen, setIsShopDrawerOpen] = useState(false);
@@ -47,6 +50,24 @@ export default function Home() {
     >([]);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (session) {
+            fetchUserData();
+        }
+    }, [session]);
+
+    const fetchUserData = async () => {
+        try {
+            const res = await fetch("/api/user/data");
+            const data = await res.json();
+            setCurrentIntake(data.currentIntake);
+            setTargets(data.targets);
+            setCoins(data.coins);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleImageCapture = (imageUrl: string, file: File) => {
         setPreview(imageUrl);
         setIsDialogOpen(true);
@@ -55,20 +76,34 @@ export default function Home() {
         fetchFoodData(file);
     };
 
-    const handleManualInput = (data: {
+    const handleManualInput = async (data: {
         protein: number;
         carbs: number;
         fat: number;
         fiber: number;
     }) => {
         const calories = data.protein * 4 + data.carbs * 4 + data.fat * 9;
-        setCurrentIntake((prev) => ({
-            calories: prev.calories + calories,
-            proteins: prev.proteins + data.protein,
-            carbs: prev.carbs + data.carbs,
-            fat: prev.fat + data.fat,
-            fiber: prev.fiber + data.fiber,
-        }));
+        const newIntakes = {
+            calories: currentIntake.calories + calories,
+            proteins: currentIntake.proteins + data.protein,
+            carbs: currentIntake.carbs + data.carbs,
+            fat: currentIntake.fat + data.fat,
+            fiber: currentIntake.fiber + data.fiber,
+        };
+
+        try {
+            const res = await fetch("/api/user/intake", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newIntakes),
+            });
+            const data = await res.json();
+            setCurrentIntake(data.currentIntake);
+            setCoins(data.coins);
+        } catch (error) {
+            console.log(error);
+        }
+
         setFoodData((prev) => [
             ...prev,
             {
@@ -82,41 +117,60 @@ export default function Home() {
         ]);
     };
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         setIsDialogOpen(false);
-        setCurrentIntake((prev) => ({
+        const newIntakes = {
             calories:
-                prev.calories +
+                currentIntake.calories +
                 foodData.reduce((sum, item) => sum + item.calories, 0),
             proteins:
-                prev.proteins +
+                currentIntake.proteins +
                 foodData.reduce((sum, item) => sum + item.proteins, 0),
             carbs:
-                prev.carbs +
+                currentIntake.carbs +
                 foodData.reduce((sum, item) => sum + item.carbs, 0),
-            fat: prev.fat + foodData.reduce((sum, item) => sum + item.fat, 0),
+            fat:
+                currentIntake.fat +
+                foodData.reduce((sum, item) => sum + item.fat, 0),
             fiber:
-                prev.fiber +
+                currentIntake.fiber +
                 foodData.reduce((sum, item) => sum + item.fiber, 0),
-        }));
+        };
+
+        try {
+            const res = await fetch("/api/user/intake", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newIntakes),
+            });
+            const data = await res.json();
+            setCurrentIntake(data.currentIntake);
+            setCoins(data.coins);
+        } catch (error) {
+            console.error(error);
+        }
         setFoodData([]);
     };
 
-    const handleSettingsSubmit = (newTargets: {
+    const handleSettingsSubmit = async (newTargets: {
         calories: number;
         proteins: number;
         carbs: number;
         fat: number;
         fiber: number;
     }) => {
-        setTargets(newTargets);
-        setCurrentIntake({
-            calories: 0,
-            proteins: 0,
-            carbs: 0,
-            fat: 0,
-            fiber: 0,
-        });
+        try {
+            const res = await fetch("/api/user/targets", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newTargets),
+            });
+            const data = await res.json();
+            setTargets(data.targets);
+            setCurrentIntake(data.currentIntake);
+        } catch (error) {
+            console.error("Error updating targets:", error);
+        }
         setIsSettingsDrawerOpen(false);
     };
 
@@ -165,7 +219,7 @@ export default function Home() {
 
     return (
         <div className="h-screen flex flex-col">
-            <Header coins={32} />
+            <Header coins={coins} />
             <div className="flex-grow overflow-y-auto m-3 flex flex-col justify-end items-center relative">
                 <CaloriesOverview
                     currentCalories={currentIntake.calories}

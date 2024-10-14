@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Lexend } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 
 const space = Lexend({
     subsets: ["latin"],
@@ -19,11 +20,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${space.className} bg-gradient-to-b from-lime-100 to-emerald-100`}
-            >
-                {children}
-            </body>
+            <SessionProvider>
+                <body
+                    className={`${space.className} bg-gradient-to-b from-lime-100 to-emerald-100`}
+                >
+                    {children}
+                </body>
+            </SessionProvider>
         </html>
     );
 }
