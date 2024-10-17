@@ -42,6 +42,7 @@ export default function CaloriesOverview({
                             strokeDasharray={circumference}
                             strokeDashoffset={strokeDashoffset}
                             strokeLinecap="butt"
+                            className="transition-stroke-dashoffset duration-500 ease-in-out"
                         />
                         <text
                             x="100"
