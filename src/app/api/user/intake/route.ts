@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
                     },
                 },
                 coins: {
-                    increment: Math.floor(newIntakes.calories / 100), // Example coins calculation
+                    increment: Math.floor(newIntakes.calories / 100),
                 },
             },
             select: {

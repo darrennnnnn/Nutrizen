@@ -160,7 +160,7 @@ export default function Home() {
         fiber: number;
     }) => {
         try {
-            const res = await fetch("/api/user/targets", {
+            const res = await fetch("/api/user/target", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newTargets),
