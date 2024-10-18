@@ -20,7 +20,7 @@ export default function ShopDrawer({
 }: Readonly<ShopDrawerProps>) {
     return (
         <Drawer open={isOpen} onOpenChange={onClose}>
-            <DrawerContent>
+            <DrawerContent className="bg-gradient-to-t from-emerald-100 to-lime-100">
                 <DrawerHeader>
                     <DrawerTitle>🚨Coming Soon!🚨</DrawerTitle>
                     <DrawerDescription>🚧🚧🚧🚧🚧</DrawerDescription>

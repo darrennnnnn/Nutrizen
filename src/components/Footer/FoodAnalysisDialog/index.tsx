@@ -46,7 +46,7 @@ export default function FoodAnalysisDialog({
 
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
-            <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
+            <AlertDialogContent className="max-h-[90vh] overflow-y-auto bg-gradient-to-t from-emerald-100 to-lime-100">
                 <AlertDialogHeader>
                     <AlertDialogTitle>
                         {loading ? "Analyzing Food" : "Confirm Food"}
@@ -70,7 +70,7 @@ export default function FoodAnalysisDialog({
                         {foodData.map((item) => (
                             <div
                                 key={item.name}
-                                className="w-full border rounded-xl p-4"
+                                className="w-full border rounded-xl p-4 bg-white/50 backdrop-blur-sm"
                             >
                                 <div className="flex flex-col items-center justify-center">
                                     <span className="text-md text-gray-700">

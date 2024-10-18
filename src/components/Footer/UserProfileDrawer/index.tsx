@@ -20,7 +20,7 @@ export default function UserProfileDrawer({
 }: Readonly<UserProfileDrawerProps>) {
     return (
         <Drawer open={isOpen} onOpenChange={onClose}>
-            <DrawerContent>
+            <DrawerContent className="bg-gradient-to-t from-emerald-100 to-lime-100">
                 <DrawerHeader>
                     <DrawerTitle>🚨User Profile Coming Soon!🚨</DrawerTitle>
                     <DrawerDescription>🚧🚧🚧🚧🚧</DrawerDescription>
