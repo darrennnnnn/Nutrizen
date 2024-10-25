@@ -1,5 +1,4 @@
 import { Smile } from "lucide-react";
-import { motion, useSpring, useTransform } from "framer-motion";
 
 interface CaloriesOverviewProps {
     currentCalories: number;

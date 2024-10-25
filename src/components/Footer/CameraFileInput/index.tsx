@@ -47,53 +47,68 @@ export default function CameraFileInput({
     ): Promise<Blob> => {
         return new Promise((resolve) => {
             const reader = new FileReader();
-            reader.onload = handleReaderLoad(resolve, maxWidth, maxHeight, quality);
+            reader.onload = handleReaderLoad(
+                resolve,
+                maxWidth,
+                maxHeight,
+                quality
+            );
             reader.readAsDataURL(file);
         });
     };
 
-    const handleReaderLoad = (
-        resolve: (value: Blob | PromiseLike<Blob>) => void,
-        maxWidth: number,
-        maxHeight: number,
-        quality: number
-    ) => (e: ProgressEvent<FileReader>) => {
-        const img = new Image();
-        img.onload = handleImageLoad(resolve, img, maxWidth, maxHeight, quality);
-        img.src = e.target?.result as string;
-    };
+    const handleReaderLoad =
+        (
+            resolve: (value: Blob | PromiseLike<Blob>) => void,
+            maxWidth: number,
+            maxHeight: number,
+            quality: number
+        ) =>
+        (e: ProgressEvent<FileReader>) => {
+            const img = new Image();
+            img.onload = handleImageLoad(
+                resolve,
+                img,
+                maxWidth,
+                maxHeight,
+                quality
+            );
+            img.src = e.target?.result as string;
+        };
 
-    const handleImageLoad = (
-        resolve: (value: Blob | PromiseLike<Blob>) => void,
-        img: HTMLImageElement,
-        maxWidth: number,
-        maxHeight: number,
-        quality: number
-    ) => () => {
-        const canvas = document.createElement("canvas");
-        let width = img.width;
-        let height = img.height;
-        if (width > height) {
-            if (width > maxWidth) {
-                height *= maxWidth / width;
-                width = maxWidth;
+    const handleImageLoad =
+        (
+            resolve: (value: Blob | PromiseLike<Blob>) => void,
+            img: HTMLImageElement,
+            maxWidth: number,
+            maxHeight: number,
+            quality: number
+        ) =>
+        () => {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else if (height > maxHeight) {
+                width *= maxHeight / height;
+                height = maxHeight;
             }
-        } else if (height > maxHeight) {
-            width *= maxHeight / height;
-            height = maxHeight;
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx?.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(
-            (blob) => {
-                if (blob) resolve(blob);
-            },
-            "image/jpeg",
-            quality
-        );
-    };
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx?.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+                (blob) => {
+                    if (blob) resolve(blob);
+                },
+                "image/jpeg",
+                quality
+            );
+        };
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -117,7 +132,7 @@ export default function CameraFileInput({
         fileInputRef.current?.click();
         setShowOptions(false);
     };
-    
+
     const handleFilePenClick = () => {
         setShowManualInputDialog(true);
         setShowOptions(false);
@@ -146,7 +161,9 @@ export default function CameraFileInput({
             />
             <button
                 onClick={handlePlusClick}
-                className={`p-3 ${showOptions ? "bg-green-950": "bg-[#14532D]"}  text-white rounded-full transition-all duration-300 ease-in-out`}
+                className={`p-3 ${
+                    showOptions ? "bg-green-950" : "bg-[#14532D]"
+                }  text-white rounded-full transition-all duration-300 ease-in-out`}
             >
                 <Plus
                     className={`w-7 h-7 transition-transform duration-300 ${
@@ -181,7 +198,7 @@ export default function CameraFileInput({
                 open={showManualInputDialog}
                 onOpenChange={setShowManualInputDialog}
             >
-                <AlertDialogContent>
+                <AlertDialogContent className="bg-gradient-to-t from-emerald-100 to-lime-100">
                     <AlertDialogHeader>
                         <AlertDialogTitle>
                             Manual Nutrient Input
@@ -210,6 +227,7 @@ export default function CameraFileInput({
                                         step="0.1"
                                         value={manualInput[nutrient]}
                                         onChange={handleManualInputChange}
+                                        className="bg-lime-50"
                                     />
                                 </div>
                             )
@@ -217,7 +235,7 @@ export default function CameraFileInput({
                     </div>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleManualInputSubmit}>
+                        <AlertDialogAction onClick={handleManualInputSubmit} className="bg-orange-950">
                             Submit
                         </AlertDialogAction>
                     </AlertDialogFooter>

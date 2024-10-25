@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { FaGithub } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import React from "react";
 import { SignInButton } from "@/components/Auth/signin-button";
