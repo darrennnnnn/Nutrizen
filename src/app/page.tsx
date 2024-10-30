@@ -218,7 +218,7 @@ export default function Home() {
     };
 
     return (
-        <div className="h-screen flex flex-col">
+        <div className="h-svh flex flex-col">
             <Header coins={coins} />
             <div className="flex-grow overflow-y-auto m-3 flex flex-col justify-end items-center relative">
                 <CaloriesOverview
