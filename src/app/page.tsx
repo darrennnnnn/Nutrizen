@@ -91,6 +91,20 @@ export default function Home() {
             fiber: currentIntake.fiber + data.fiber,
         };
 
+        const prevIntake = currentIntake;
+        const prevFoodData = [...foodData];
+        const optimisticFoodEntry = {
+            name: "Manual Entry",
+            calories: Math.round(calories),
+            proteins: data.protein,
+            carbs: data.carbs,
+            fiber: data.fiber,
+            fat: data.fat,
+        };
+
+        setCurrentIntake(newIntakes);
+        setFoodData((prev) => [...prev, optimisticFoodEntry]);
+
         try {
             const res = await fetch("/api/user/intake", {
                 method: "POST",
@@ -102,19 +116,11 @@ export default function Home() {
             setCoins(data.coins);
         } catch (error) {
             console.log(error);
-        }
 
-        setFoodData((prev) => [
-            ...prev,
-            {
-                name: "Manual Entry",
-                calories: Math.round(calories),
-                proteins: data.protein,
-                carbs: data.carbs,
-                fiber: data.fiber,
-                fat: data.fat,
-            },
-        ]);
+            // revert changes
+            setCurrentIntake(prevIntake);
+            setFoodData(prevFoodData);
+        }
     };
 
     const handleConfirm = async () => {
@@ -137,6 +143,11 @@ export default function Home() {
                 foodData.reduce((sum, item) => sum + item.fiber, 0),
         };
 
+        const prevIntake = currentIntake;
+        const prevFoodData = [...foodData];
+        setCurrentIntake(newIntakes);
+        setFoodData([]);
+
         try {
             const res = await fetch("/api/user/intake", {
                 method: "POST",
@@ -148,8 +159,11 @@ export default function Home() {
             setCoins(data.coins);
         } catch (error) {
             console.error(error);
+
+            //revert changes
+            setCurrentIntake(prevIntake);
+            setFoodData(prevFoodData);
         }
-        setFoodData([]);
     };
 
     const handleSettingsSubmit = async (newTargets: {
@@ -159,6 +173,9 @@ export default function Home() {
         fat: number;
         fiber: number;
     }) => {
+        const prevTargets = targets;
+        setTargets(newTargets);
+
         try {
             const res = await fetch("/api/user/target", {
                 method: "POST",
@@ -170,6 +187,7 @@ export default function Home() {
             setCurrentIntake(data.currentIntake);
         } catch (error) {
             console.error("Error updating targets:", error);
+            setTargets(prevTargets);
         }
         setIsSettingsDrawerOpen(false);
     };

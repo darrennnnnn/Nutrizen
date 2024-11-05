@@ -69,8 +69,8 @@ export default function SettingsDrawer({
                     <DrawerHeader>
                         <DrawerTitle>Configure Your Targets</DrawerTitle>
                         <DrawerDescription>
-                            Set your daily nutritional targets here. Calories
-                            are automatically calculated.
+                            Set your daily nutritional targets here.{" "}
+                            <span className="font-bold">Calories are automatically calculated.</span>
                         </DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4 space-y-4">
@@ -99,7 +99,7 @@ export default function SettingsDrawer({
                                         (g)
                                     </Label>
                                     <Input
-                                    className="bg-lime-50"
+                                        className="bg-lime-50"
                                         id={`target${
                                             nutrient.charAt(0).toUpperCase() +
                                             nutrient.slice(1)
@@ -123,7 +123,10 @@ export default function SettingsDrawer({
                                 Warning: Saving changes will reset your current
                                 intakes for the day to 0.
                             </p>
-                            <Button type="submit" className="w-full bg-orange-950">
+                            <Button
+                                type="submit"
+                                className="w-full bg-orange-950"
+                            >
                                 Save Changes
                             </Button>
                         </DrawerClose>
