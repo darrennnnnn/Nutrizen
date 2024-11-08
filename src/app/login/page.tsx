@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { FaGoogle } from "react-icons/fa";
 import React from "react";
 import { GithubSignInButton } from "@/components/Auth/github-signin-button";
 import { GoogleSignInButton } from "@/components/Auth/google-signin-button";
