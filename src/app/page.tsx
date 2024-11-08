@@ -7,7 +7,7 @@ import NutrientsOverview from "@/components/Status/NutrientsOveview";
 import Footer from "@/components/Footer";
 import FoodAnalysisDialog from "@/components/Footer/FoodAnalysisDialog";
 import SettingsDrawer from "@/components/Footer/SettingsDrawer";
-import { FoodApiResponse } from "@/lib/types";
+import { ColorOptions, FoodApiResponse } from "@/lib/types";
 import ShopDrawer from "@/components/Footer/ShopDrawer";
 import UserProfileDrawer from "@/components/Footer/UserProfileDrawer";
 import { useSession } from "next-auth/react";
@@ -41,18 +41,7 @@ export default function Home() {
         useState(false);
     const [isCustomizeDrawerOpen, setIsCustomizeDrawerOpen] = useState(false);
 
-    const [color, setColor] = useState<
-        | "yellow"
-        | "blue"
-        | "brown"
-        | "cyan"
-        | "green"
-        | "orange"
-        | "pink"
-        | "purple"
-        | "red"
-        | "white"
-    >("yellow");
+    const [color, setColor] = useState<ColorOptions>("yellow");
 
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<
@@ -66,20 +55,7 @@ export default function Home() {
         }[]
     >([]);
 
-    const handleColorUpdate = (
-        newColor: SetStateAction<
-            | "yellow"
-            | "blue"
-            | "brown"
-            | "cyan"
-            | "green"
-            | "orange"
-            | "pink"
-            | "purple"
-            | "red"
-            | "white"
-        >
-    ) => {
+    const handleColorUpdate = (newColor: SetStateAction<ColorOptions>) => {
         setColor(newColor);
         fetchUserData();
     };

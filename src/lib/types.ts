@@ -13,3 +13,16 @@ export interface FoodApiResponse {
         };
     }>;
 }
+
+export type ColorOptions =
+    | "yellow"
+    | "blue"
+    | "brown"
+    | "cyan"
+    | "green"
+    | "orange"
+    | "pink"
+    | "purple"
+    | "red"
+    | "white"
+    | "";

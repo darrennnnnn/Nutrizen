@@ -1,20 +1,17 @@
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
+import { ColorOptions } from "@/lib/types";
 
 interface UserProfileDrawerProps {
     isOpen: boolean;
     onClose: () => void;
-    onColorUpdate: (color: string) => void;
+    onColorUpdate: (color: SetStateAction<ColorOptions>) => void;
 }
 
 const colors = [
@@ -66,9 +63,23 @@ export default function CustomizeDrawer({
     onColorUpdate,
 }: Readonly<UserProfileDrawerProps>) {
     const [activeTab, setActiveTab] = useState("colors");
-    const [loading, setLoading] = useState("");
+    const [loading, setLoading] = useState<SetStateAction<ColorOptions>>("");
 
-    const handleEquipColor = async (colorName: string) => {
+    const handleEquipColor = async (
+        colorName: SetStateAction<
+            | "yellow"
+            | "blue"
+            | "brown"
+            | "cyan"
+            | "green"
+            | "orange"
+            | "pink"
+            | "purple"
+            | "red"
+            | "white"
+            | ""
+        >
+    ) => {
         setLoading(colorName);
 
         try {
@@ -138,7 +149,9 @@ export default function CustomizeDrawer({
                                     <Button
                                         className="bg-orange-950 w-full"
                                         onClick={() =>
-                                            handleEquipColor(item.name)
+                                            handleEquipColor(
+                                                item.name as ColorOptions
+                                            )
                                         }
                                         disabled={loading === item.name}
                                     >

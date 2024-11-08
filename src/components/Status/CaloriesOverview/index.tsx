@@ -9,21 +9,12 @@ import purple from "../../../../public/character/purplegif.gif";
 import red from "../../../../public/character/redgif.gif";
 import white from "../../../../public/character/whitegif.gif";
 import yellow from "../../../../public/character/yellowgif.gif";
+import { ColorOptions } from "@/lib/types";
 
 interface CaloriesOverviewProps {
     currentCalories: number;
     targetCalories: number;
-    characterColor:
-        | "blue"
-        | "brown"
-        | "cyan"
-        | "green"
-        | "orange"
-        | "pink"
-        | "purple"
-        | "red"
-        | "white"
-        | "yellow";
+    characterColor: ColorOptions;
 }
 
 export default function CaloriesOverview({
@@ -54,7 +45,7 @@ export default function CaloriesOverview({
         <>
             <div className="relative flex-grow flex justify-center items-center pt-28">
                 <Image
-                    src={characterImage[characterColor]}
+                    src={characterColor ? characterImage[characterColor] : ""}
                     alt="blob"
                     height={250}
                     width={250}
