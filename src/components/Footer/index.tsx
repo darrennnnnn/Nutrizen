@@ -1,4 +1,4 @@
-import { Construction, Settings, Store, UserRound } from "lucide-react";
+import { Shirt, Settings, Store, UserRound } from "lucide-react";
 import CameraFileInput from "./CameraFileInput";
 
 interface FooterProps {
@@ -12,6 +12,7 @@ interface FooterProps {
         fat: number;
         fiber: number;
     }) => void;
+    onCustomizeClick: () => void;
 }
 
 export default function Footer({
@@ -20,14 +21,15 @@ export default function Footer({
     onProfileClick,
     onImageCapture,
     onManualInput,
+    onCustomizeClick,
 }: Readonly<FooterProps>) {
     return (
         <div className="w-full flex items-center justify-around py-2">
             <button onClick={onSettingsClick} className="p-3">
                 <Settings />
             </button>
-            <button className="p-3">
-                <Construction />
+            <button onClick={onCustomizeClick} className="p-3">
+                <Shirt />
             </button>
             <CameraFileInput
                 onImageCapture={onImageCapture}

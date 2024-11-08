@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState, ChangeEvent } from "react";
 import { Plus, Camera, FilePen } from "lucide-react";
 import {
@@ -47,68 +49,44 @@ export default function CameraFileInput({
     ): Promise<Blob> => {
         return new Promise((resolve) => {
             const reader = new FileReader();
-            reader.onload = handleReaderLoad(
-                resolve,
-                maxWidth,
-                maxHeight,
-                quality
-            );
+            reader.onload = (e: ProgressEvent<FileReader>) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob(
+                        (blob) => {
+                            resolve(blob as Blob);
+                        },
+                        "image/jpeg",
+                        quality
+                    );
+                };
+                img.src = e.target?.result as string;
+            };
             reader.readAsDataURL(file);
         });
     };
-
-    const handleReaderLoad =
-        (
-            resolve: (value: Blob | PromiseLike<Blob>) => void,
-            maxWidth: number,
-            maxHeight: number,
-            quality: number
-        ) =>
-        (e: ProgressEvent<FileReader>) => {
-            const img = new Image();
-            img.onload = handleImageLoad(
-                resolve,
-                img,
-                maxWidth,
-                maxHeight,
-                quality
-            );
-            img.src = e.target?.result as string;
-        };
-
-    const handleImageLoad =
-        (
-            resolve: (value: Blob | PromiseLike<Blob>) => void,
-            img: HTMLImageElement,
-            maxWidth: number,
-            maxHeight: number,
-            quality: number
-        ) =>
-        () => {
-            const canvas = document.createElement("canvas");
-            let width = img.width;
-            let height = img.height;
-            if (width > height) {
-                if (width > maxWidth) {
-                    height *= maxWidth / width;
-                    width = maxWidth;
-                }
-            } else if (height > maxHeight) {
-                width *= maxHeight / height;
-                height = maxHeight;
-            }
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext("2d");
-            ctx?.drawImage(img, 0, 0, width, height);
-            canvas.toBlob(
-                (blob) => {
-                    if (blob) resolve(blob);
-                },
-                "image/jpeg",
-                quality
-            );
-        };
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -235,7 +213,10 @@ export default function CameraFileInput({
                     </div>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleManualInputSubmit} className="bg-orange-950">
+                        <AlertDialogAction
+                            onClick={handleManualInputSubmit}
+                            className="bg-orange-950"
+                        >
                             Submit
                         </AlertDialogAction>
                     </AlertDialogFooter>

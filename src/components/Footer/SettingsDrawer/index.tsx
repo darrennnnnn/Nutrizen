@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
     Drawer,
@@ -70,7 +72,9 @@ export default function SettingsDrawer({
                         <DrawerTitle>Configure Your Targets</DrawerTitle>
                         <DrawerDescription>
                             Set your daily nutritional targets here.{" "}
-                            <span className="font-bold">Calories are automatically calculated.</span>
+                            <span className="font-bold">
+                                Calories are automatically calculated.
+                            </span>
                         </DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4 space-y-4">

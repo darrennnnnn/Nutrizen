@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import Header from "../components/Header";
 import CaloriesOverview from "@/components/Status/CaloriesOverview";
 import NutrientsOverview from "@/components/Status/NutrientsOveview";
@@ -11,6 +11,8 @@ import { FoodApiResponse } from "@/lib/types";
 import ShopDrawer from "@/components/Footer/ShopDrawer";
 import UserProfileDrawer from "@/components/Footer/UserProfileDrawer";
 import { useSession } from "next-auth/react";
+import { LoaderCircle } from "lucide-react";
+import CustomizeDrawer from "@/components/Footer/CustomizeDrawer";
 
 export default function Home() {
     const { data: session } = useSession();
@@ -30,12 +32,27 @@ export default function Home() {
         fiber: 30,
     });
 
+    const [loading, setLoading] = useState(false);
     const [coins, setCoins] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
     const [isShopDrawerOpen, setIsShopDrawerOpen] = useState(false);
     const [isUserProfileDrawerOpen, setIsUserProfileDrawerOpen] =
         useState(false);
+    const [isCustomizeDrawerOpen, setIsCustomizeDrawerOpen] = useState(false);
+
+    const [color, setColor] = useState<
+        | "yellow"
+        | "blue"
+        | "brown"
+        | "cyan"
+        | "green"
+        | "orange"
+        | "pink"
+        | "purple"
+        | "red"
+        | "white"
+    >("yellow");
 
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<
@@ -48,24 +65,44 @@ export default function Home() {
             fat: number;
         }[]
     >([]);
-    const [loading, setLoading] = useState(false);
+
+    const handleColorUpdate = (
+        newColor: SetStateAction<
+            | "yellow"
+            | "blue"
+            | "brown"
+            | "cyan"
+            | "green"
+            | "orange"
+            | "pink"
+            | "purple"
+            | "red"
+            | "white"
+        >
+    ) => {
+        setColor(newColor);
+        fetchUserData();
+    };
 
     useEffect(() => {
         if (session) {
             fetchUserData();
         }
-    }, [session]);
+    }, [session, color]);
 
     const fetchUserData = async () => {
+        setLoading(true);
         try {
             const res = await fetch("/api/user/data");
             const data = await res.json();
             setCurrentIntake(data.currentIntake);
             setTargets(data.targets);
             setCoins(data.coins);
+            setColor(data.color);
         } catch (error) {
             console.log(error);
         }
+        setLoading(false);
     };
 
     const handleImageCapture = (imageUrl: string, file: File) => {
@@ -237,9 +274,20 @@ export default function Home() {
 
     return (
         <div className="h-svh flex flex-col">
+            {loading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-orange-950 bg-opacity-20 z-50">
+                    <LoaderCircle
+                        strokeWidth={4}
+                        color="#14532D"
+                        size={50}
+                        className="duration-[1200] animate-spin"
+                    />
+                </div>
+            )}
             <Header coins={coins} />
             <div className="flex-grow overflow-y-auto m-3 flex flex-col justify-end items-center relative">
                 <CaloriesOverview
+                    characterColor={color}
                     currentCalories={currentIntake.calories}
                     targetCalories={targets.calories}
                 />
@@ -254,6 +302,7 @@ export default function Home() {
                 onProfileClick={() => setIsUserProfileDrawerOpen(true)}
                 onImageCapture={handleImageCapture}
                 onManualInput={handleManualInput}
+                onCustomizeClick={() => setIsCustomizeDrawerOpen(true)}
             />
             <FoodAnalysisDialog
                 isOpen={isDialogOpen}
@@ -273,10 +322,18 @@ export default function Home() {
                 isOpen={isShopDrawerOpen}
                 onClose={() => setIsShopDrawerOpen(false)}
             />
-            <UserProfileDrawer
-                isOpen={isUserProfileDrawerOpen}
-                onClose={() => setIsUserProfileDrawerOpen(false)}
+            <CustomizeDrawer
+                isOpen={isCustomizeDrawerOpen}
+                onClose={() => setIsCustomizeDrawerOpen(false)}
+                onColorUpdate={handleColorUpdate}
             />
+            {session && (
+                <UserProfileDrawer
+                    isOpen={isUserProfileDrawerOpen}
+                    onClose={() => setIsUserProfileDrawerOpen(false)}
+                    userData={session}
+                />
+            )}
         </div>
     );
 }

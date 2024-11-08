@@ -36,6 +36,7 @@ export async function GET() {
             currentIntake: user.currentIntake,
             targets: user.target,
             coins: user.coins,
+            color: user.color,
         });
     } catch (error) {
         console.error("Error fetching user data:", error);

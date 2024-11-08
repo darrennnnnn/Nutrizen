@@ -1,13 +1,35 @@
-import { Smile } from "lucide-react";
+import Image from "next/image";
+import blue from "../../../../public/character/bluegif.gif";
+import brown from "../../../../public/character/browngif.gif";
+import cyan from "../../../../public/character/cyangif.gif";
+import green from "../../../../public/character/greengif.gif";
+import orange from "../../../../public/character/orangegif.gif";
+import pink from "../../../../public/character/pinkgif.gif";
+import purple from "../../../../public/character/purplegif.gif";
+import red from "../../../../public/character/redgif.gif";
+import white from "../../../../public/character/whitegif.gif";
+import yellow from "../../../../public/character/yellowgif.gif";
 
 interface CaloriesOverviewProps {
     currentCalories: number;
     targetCalories: number;
+    characterColor:
+        | "blue"
+        | "brown"
+        | "cyan"
+        | "green"
+        | "orange"
+        | "pink"
+        | "purple"
+        | "red"
+        | "white"
+        | "yellow";
 }
 
 export default function CaloriesOverview({
     currentCalories,
     targetCalories,
+    characterColor,
 }: Readonly<CaloriesOverviewProps>) {
     const percentage = Math.min(100, (currentCalories / targetCalories) * 100);
     const strokeWidth = 20;
@@ -15,10 +37,28 @@ export default function CaloriesOverview({
     const circumference = Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
+    const characterImage = {
+        blue: blue,
+        brown: brown,
+        cyan: cyan,
+        green: green,
+        orange: orange,
+        pink: pink,
+        purple: purple,
+        red: red,
+        white: white,
+        yellow: yellow,
+    };
+
     return (
         <>
             <div className="relative flex-grow flex justify-center items-center pt-28">
-                <Smile size={250} />
+                <Image
+                    src={characterImage[characterColor]}
+                    alt="blob"
+                    height={250}
+                    width={250}
+                />
             </div>
             <div className="max-w-screen-sm w-full flex flex-col items-center pb-2">
                 <div className="relative w-full pb-[60%]">

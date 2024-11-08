@@ -17,6 +17,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
 
+    color         String   @default("yellow")
     coins         Int      @default(0)
     currentIntake Intake?
     target        Targets?
