@@ -2,7 +2,7 @@ import { signIn } from "@/auth/auth";
 import { Button } from "../ui/button";
 import { FaGithub } from "react-icons/fa";
 
-export function SignInButton() {
+export function GithubSignInButton() {
     return (
         <form
             action={async () => {

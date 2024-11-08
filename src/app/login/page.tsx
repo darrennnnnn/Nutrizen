@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { FaGoogle } from "react-icons/fa";
 import React from "react";
-import { SignInButton } from "@/components/Auth/signin-button";
+import { GithubSignInButton } from "@/components/Auth/github-signin-button";
+import { GoogleSignInButton } from "@/components/Auth/google-signin-button";
 
 export default function LoginPage() {
     return (
@@ -22,14 +23,8 @@ export default function LoginPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 w-full">
-                    <Button
-                        size={"lg"}
-                        className="bg-orange-950 flex items-center justify-center gap-2"
-                    >
-                        <FaGoogle size={20} />
-                        <p>Sign Up using Google</p>
-                    </Button>
-                    <SignInButton />
+                    <GoogleSignInButton />
+                    <GithubSignInButton />
                 </div>
             </div>
         </div>
