@@ -57,7 +57,6 @@ export default function Home() {
 
     const handleColorUpdate = (newColor: SetStateAction<ColorOptions>) => {
         setColor(newColor);
-        fetchUserData();
     };
 
     useEffect(() => {
