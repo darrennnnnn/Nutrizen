@@ -9,18 +9,36 @@ import purple from "../../../../public/character/purplegif.gif";
 import red from "../../../../public/character/redgif.gif";
 import white from "../../../../public/character/whitegif.gif";
 import yellow from "../../../../public/character/yellowgif.gif";
+import cat from "../../../../public/favpng_cat-pixel-art-pusheen.png";
+import dog from "../../../../public/Lovepik_com-380361703-pixel-style-cute-dog-pixel-art-cartoon-white.png";
+import fox from "../../../../public/fox.png";
 import { ColorOptions } from "@/lib/types";
 
 interface CaloriesOverviewProps {
     currentCalories: number;
     targetCalories: number;
-    characterColor: ColorOptions;
+    characterColor: string | ColorOptions;
+    pet: string;
 }
+
+const characterImage = {
+    blue: blue,
+    brown: brown,
+    cyan: cyan,
+    green: green,
+    orange: orange,
+    pink: pink,
+    purple: purple,
+    red: red,
+    white: white,
+    yellow: yellow,
+} as const;
 
 export default function CaloriesOverview({
     currentCalories,
     targetCalories,
     characterColor,
+    pet,
 }: Readonly<CaloriesOverviewProps>) {
     const percentage = Math.min(100, (currentCalories / targetCalories) * 100);
     const strokeWidth = 20;
@@ -28,28 +46,36 @@ export default function CaloriesOverview({
     const circumference = Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-    const characterImage = {
-        blue: blue,
-        brown: brown,
-        cyan: cyan,
-        green: green,
-        orange: orange,
-        pink: pink,
-        purple: purple,
-        red: red,
-        white: white,
-        yellow: yellow,
+    const petImage = {
+        cat: cat,
+        dog: dog,
+        fox: fox,
     };
-
     return (
         <>
             <div className="relative flex-grow flex justify-center items-center pt-28">
-                <Image
-                    src={characterColor ? characterImage[characterColor] : ""}
-                    alt="blob"
-                    height={250}
-                    width={250}
-                />
+                <div className="relative">
+                    <Image
+                        src={
+                            characterColor
+                                ? characterImage[
+                                      characterColor as keyof typeof characterImage
+                                  ]
+                                : ""
+                        }
+                        alt="blob"
+                        height={250}
+                        width={250}
+                        unoptimized
+                    />{" "}
+                    {pet && (
+                        <Image
+                            src={petImage[pet as keyof typeof petImage]}
+                            alt={pet}
+                            className="position -bottom-10 -right-16 absolute h-40 w-40"
+                        />
+                    )}
+                </div>
             </div>
             <div className="max-w-screen-sm w-full flex flex-col items-center pb-2">
                 <div className="relative w-full pb-[60%]">

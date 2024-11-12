@@ -7,7 +7,7 @@ import NutrientsOverview from "@/components/Status/NutrientsOveview";
 import Footer from "@/components/Footer";
 import FoodAnalysisDialog from "@/components/Footer/FoodAnalysisDialog";
 import SettingsDrawer from "@/components/Footer/SettingsDrawer";
-import { ColorOptions, FoodApiResponse } from "@/lib/types";
+import { FoodApiResponse } from "@/lib/types";
 import ShopDrawer from "@/components/Footer/ShopDrawer";
 import UserProfileDrawer from "@/components/Footer/UserProfileDrawer";
 import { useSession } from "next-auth/react";
@@ -41,7 +41,11 @@ export default function Home() {
         useState(false);
     const [isCustomizeDrawerOpen, setIsCustomizeDrawerOpen] = useState(false);
 
-    const [color, setColor] = useState<ColorOptions>("yellow");
+    const [color, setColor] = useState("yellow");
+    const [pet, setPet] = useState("");
+
+    const [ownedColors, setOwnedColors] = useState<string[]>(["green"]);
+    const [ownedPets, setOwnedPets] = useState<string[]>([""]);
 
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<
@@ -55,8 +59,19 @@ export default function Home() {
         }[]
     >([]);
 
-    const handleColorUpdate = (newColor: SetStateAction<ColorOptions>) => {
+    const handleColorUpdate = async (newColor: SetStateAction<string>) => {
         setColor(newColor);
+        await fetchUserData();
+    };
+
+    const handlePetUpdate = async (newPet: SetStateAction<string>) => {
+        setPet(newPet);
+        await fetchUserData();
+    };
+
+    const handlePurchase = async (newCoins: number) => {
+        setCoins(newCoins);
+        await fetchUserData();
     };
 
     useEffect(() => {
@@ -74,6 +89,8 @@ export default function Home() {
             setTargets(data.targets);
             setCoins(data.coins);
             setColor(data.color);
+            setOwnedColors(data.ownedColors || ["green"]);
+            setOwnedPets(data.ownedPets || [""]);
         } catch (error) {
             console.log(error);
         }
@@ -265,6 +282,7 @@ export default function Home() {
                     characterColor={color}
                     currentCalories={currentIntake.calories}
                     targetCalories={targets.calories}
+                    pet={pet}
                 />
                 <NutrientsOverview
                     currentIntake={currentIntake}
@@ -296,11 +314,18 @@ export default function Home() {
             <ShopDrawer
                 isOpen={isShopDrawerOpen}
                 onClose={() => setIsShopDrawerOpen(false)}
+                coins={coins}
+                onPurchase={handlePurchase}
+                ownedColors={ownedColors}
+                ownedPets={ownedPets}
             />
             <CustomizeDrawer
                 isOpen={isCustomizeDrawerOpen}
                 onClose={() => setIsCustomizeDrawerOpen(false)}
                 onColorUpdate={handleColorUpdate}
+                ownedColors={ownedColors}
+                ownedPets={ownedPets}
+                onPetUpdate={handlePetUpdate}
             />
             {session && (
                 <UserProfileDrawer
