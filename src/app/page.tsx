@@ -326,6 +326,7 @@ export default function Home() {
                 ownedColors={ownedColors}
                 ownedPets={ownedPets}
                 onPetUpdate={handlePetUpdate}
+                currentPet={pet}
             />
             {session && (
                 <UserProfileDrawer

@@ -17,6 +17,7 @@ interface UserProfileDrawerProps {
     ownedColors: string[];
     ownedPets: string[];
     onPetUpdate: (pet: SetStateAction<string>) => void;
+    currentPet: string;
 }
 
 export default function CustomizeDrawer({
@@ -26,6 +27,7 @@ export default function CustomizeDrawer({
     ownedColors,
     ownedPets,
     onPetUpdate,
+    currentPet,
 }: Readonly<UserProfileDrawerProps>) {
     const [activeTab, setActiveTab] = useState("colors");
     const [loading, setLoading] = useState<string>("");
@@ -45,7 +47,7 @@ export default function CustomizeDrawer({
             if (!response.ok) {
                 throw new Error("Failed updating color");
             }
-            await onColorUpdate(colorName);
+            onColorUpdate(colorName);
         } catch (error) {
             console.log("error updating color", error);
         } finally {
@@ -69,7 +71,7 @@ export default function CustomizeDrawer({
                 throw new Error("Failed updating pet");
             }
 
-            await onPetUpdate(petName);
+            onPetUpdate(petName);
         } catch (error) {
             console.log("error updating pet", error);
         } finally {
@@ -161,13 +163,20 @@ export default function CustomizeDrawer({
                                             <Button
                                                 className="bg-orange-950 w-full"
                                                 onClick={() =>
-                                                    handleEquipPet(item.name)
+                                                    currentPet === item.name
+                                                        ? handleEquipPet("")
+                                                        : handleEquipPet(
+                                                              item.name
+                                                          )
                                                 }
                                                 disabled={loading === item.name}
                                             >
                                                 <span className="font-bold">
                                                     {loading === item.name
                                                         ? "Equipping"
+                                                        : currentPet ===
+                                                          item.name
+                                                        ? "Unequip"
                                                         : "Equip"}
                                                 </span>
                                             </Button>
