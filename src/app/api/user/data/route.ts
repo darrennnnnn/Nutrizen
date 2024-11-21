@@ -37,8 +37,11 @@ export async function GET() {
             targets: user.target,
             coins: user.coins,
             color: user.color,
-            ownedColors: user.ownedColors,
+            accessory: user.accessories,
+            pet: user.pet,
+            ownedColors: user.ownedColors,  
             ownedPets: user.ownedPets,
+            ownedAccessories: user.ownedAccessories,
         });
     } catch (error) {
         console.error("Error fetching user data:", error);

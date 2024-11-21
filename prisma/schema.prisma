@@ -19,6 +19,7 @@ model User {
 
     color         String   @default("green")
     pet           String   @default("")
+    accessories   String   @default("")
     coins         Int      @default(0)
     currentIntake Intake?
     target        Targets?

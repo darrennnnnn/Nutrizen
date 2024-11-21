@@ -19,6 +19,7 @@ interface ShopDrawerProps {
     onPurchase: (newCoins: number) => void;
     ownedColors: string[];
     ownedPets: string[];
+    ownedAccessories: string[];
 }
 
 export default function ShopDrawer({
@@ -28,6 +29,7 @@ export default function ShopDrawer({
     onPurchase,
     ownedColors,
     ownedPets,
+    ownedAccessories,
 }: Readonly<ShopDrawerProps>) {
     const { data: session } = useSession();
     const [activeTab, setActiveTab] = useState("colors");
@@ -229,46 +231,32 @@ export default function ShopDrawer({
                                         }
                                         disabled={
                                             loading === item.name ||
-                                            coins < item.price
+                                            coins < item.price ||
+                                            ownedAccessories.includes(item.name)
                                         }
                                     >
-                                        <FaCoins className="mr-1" />
-                                        <span className="font-bold">
-                                            {loading === item.name
-                                                ? "Purchasing..."
-                                                : item.price}
-                                        </span>
+                                        {ownedAccessories.includes(
+                                            item.name
+                                        ) ? (
+                                            <span className="font-bold">
+                                                Owned
+                                            </span>
+                                        ) : (
+                                            <>
+                                                <FaCoins className="mr-1" />
+                                                <span className="font-bold">
+                                                    {loading === item.name
+                                                        ? "Purchasing..."
+                                                        : item.price}
+                                                </span>
+                                            </>
+                                        )}
                                     </Button>
                                 </div>
                             ))}
                     </div>
                 </div>
             </DrawerContent>
-            {/* <DrawerContent className="bg-gradient-to-t from-emerald-100 to-lime-100">
-                <DrawerHeader>
-                    <DrawerTitle>Shop</DrawerTitle>
-                    <DrawerDescription>🚧🚧🚧🚧🚧</DrawerDescription>
-                </DrawerHeader>
-                <div className="max-h-96 overflow-auto p-2">
-                    <div className="grid grid-cols-2 gap-2">
-                        {shopItems["faceItems"].map((item) => (
-                            <div
-                                key={item.name}
-                                className="bg-lime-50 rounded-md p-2 flex flex-col items-center"
-                            >
-                                <p>{item.name}</p>
-                                <Image src={item.image} alt={item.name} />
-                                <Button className="bg-orange-950 w-full">
-                                    <FaCoins className="mr-1" />
-                                    <span className="font-bold">
-                                        {item.price}
-                                    </span>
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </DrawerContent> */}
         </Drawer>
     );
 }

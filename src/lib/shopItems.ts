@@ -1,8 +1,16 @@
 import { StaticImageData } from "next/image";
-import SunGlasses from "../../public/63ffd408044a42f175317026e8f9e884.png";
-import Cat from "../../public/favpng_cat-pixel-art-pusheen.png";
-import Dog from "../../public/Lovepik_com-380361703-pixel-style-cute-dog-pixel-art-cartoon-white.png";
-import Fox from "../../public/fox.png";
+import Cat from "../../public/pets/newcat.png";
+import Bear from "../../public/pets/newbear.png";
+import Bunny from "../../public/pets/newbunny.png";
+import Dog from "../../public/pets/newdog.png";
+import Duck from "../../public/pets/newduck.png";
+import Frog from "../../public/pets/newfrog.png";
+import Fox from "../../public/pets/fox.png";
+
+import WitchHat from "../../public/accessories/witchhat(2).png";
+import StrawHat from "../../public/accessories/strawhat.png";
+import TopHat from "../../public/accessories/tophat.png";
+import ChefHat from "../../public/accessories/chefhat.png";
 
 interface ColorItem {
     name: string;
@@ -77,19 +85,24 @@ export const shopItems: ShopItems = {
     ],
     accessories: [
         {
-            name: "sunglasses",
-            image: SunGlasses,
-            price: 15,
+            name: "witchhat",
+            image: WitchHat,
+            price: 50,
         },
         {
-            name: "sunglasses",
-            image: SunGlasses,
-            price: 15,
+            name: "strawhat",
+            image: StrawHat,
+            price: 50,
         },
         {
-            name: "sunglasses",
-            image: SunGlasses,
-            price: 15,
+            name: "tophat",
+            image: TopHat,
+            price: 50,
+        },
+        {
+            name: "chefhat",
+            image: ChefHat,
+            price: 50,
         },
     ],
     pets: [
@@ -106,6 +119,26 @@ export const shopItems: ShopItems = {
         {
             name: "fox",
             image: Fox,
+            price: 50,
+        },
+        {
+            name: "bear",
+            image: Bear,
+            price: 50,
+        },
+        {
+            name: "bunny",
+            image: Bunny,
+            price: 50,
+        },
+        {
+            name: "duck",
+            image: Duck,
+            price: 50,
+        },
+        {
+            name: "frog",
+            image: Frog,
             price: 50,
         },
     ],

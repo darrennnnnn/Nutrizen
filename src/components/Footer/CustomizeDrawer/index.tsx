@@ -18,6 +18,9 @@ interface UserProfileDrawerProps {
     ownedPets: string[];
     onPetUpdate: (pet: SetStateAction<string>) => void;
     currentPet: string;
+    onAccessoryUpdate: (accessory: SetStateAction<string>) => void;
+    currentAccessory: string;
+    ownedAccessories: string[];
 }
 
 export default function CustomizeDrawer({
@@ -28,6 +31,9 @@ export default function CustomizeDrawer({
     ownedPets,
     onPetUpdate,
     currentPet,
+    onAccessoryUpdate,
+    currentAccessory,
+    ownedAccessories,
 }: Readonly<UserProfileDrawerProps>) {
     const [activeTab, setActiveTab] = useState("colors");
     const [loading, setLoading] = useState<string>("");
@@ -78,6 +84,28 @@ export default function CustomizeDrawer({
             setLoading("");
         }
     };
+
+    const handleEquipAccessory = async (accessoryName: string) => {
+        setLoading(accessoryName);
+
+        try {
+            const response = await fetch("/api/user/accessory", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ accessory: accessoryName }),
+            });
+            if (!response.ok) {
+                throw new Error("Failed updating accessory");
+            }
+            onAccessoryUpdate(accessoryName);
+        } catch (error) {
+            console.log("error updating accessory", error);
+        } finally {
+            setLoading("");
+        }
+    };
     return (
         <Drawer open={isOpen} onOpenChange={onClose}>
             <DrawerContent className="bg-gradient-to-t from-emerald-100 to-lime-100">
@@ -109,7 +137,7 @@ export default function CustomizeDrawer({
                         Accessories
                     </button>
                 </div>
-                <div className="max-h-96 overflow-auto p-2">
+                <div className="h-96 overflow-auto p-2">
                     <div className="grid grid-cols-2 gap-2">
                         {activeTab === "colors" &&
                             shopItems.colors.map(
@@ -175,6 +203,48 @@ export default function CustomizeDrawer({
                                                     {loading === item.name
                                                         ? "Equipping"
                                                         : currentPet ===
+                                                          item.name
+                                                        ? "Unequip"
+                                                        : "Equip"}
+                                                </span>
+                                            </Button>
+                                        </div>
+                                    )
+                            )}
+                        {activeTab === "accessories" &&
+                            shopItems.accessories.map(
+                                (item) =>
+                                    ownedAccessories.includes(item.name) && (
+                                        <div
+                                            key={item.name}
+                                            className="bg-lime-50 rounded-md p-2 flex flex-col items-center capitalize h-60 justify-between"
+                                        >
+                                            <p>{item.name}</p>
+                                            <div className="h-32">
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    className="w-full h-full object-contain"
+                                                />
+                                            </div>
+                                            <Button
+                                                className="bg-orange-950 w-full"
+                                                onClick={() =>
+                                                    currentAccessory ===
+                                                    item.name
+                                                        ? handleEquipAccessory(
+                                                              ""
+                                                          )
+                                                        : handleEquipAccessory(
+                                                              item.name
+                                                          )
+                                                }
+                                                disabled={loading === item.name}
+                                            >
+                                                <span className="font-bold">
+                                                    {loading === item.name
+                                                        ? "Equipping"
+                                                        : currentAccessory ===
                                                           item.name
                                                         ? "Unequip"
                                                         : "Equip"}

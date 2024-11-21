@@ -43,9 +43,11 @@ export default function Home() {
 
     const [color, setColor] = useState("yellow");
     const [pet, setPet] = useState("");
+    const [accessory, setAccessory] = useState("");
 
     const [ownedColors, setOwnedColors] = useState<string[]>(["green"]);
     const [ownedPets, setOwnedPets] = useState<string[]>([""]);
+    const [ownedAccessories, setOwnedAccessories] = useState<string[]>([""]);
 
     const [preview, setPreview] = useState<string | null>(null);
     const [foodData, setFoodData] = useState<
@@ -69,6 +71,13 @@ export default function Home() {
         await fetchUserData();
     };
 
+    const handleAccessoryUpdate = async (
+        newAccessory: SetStateAction<string>
+    ) => {
+        setAccessory(newAccessory);
+        await fetchUserData();
+    };
+
     const handlePurchase = async (newCoins: number) => {
         setCoins(newCoins);
         await fetchUserData();
@@ -89,8 +98,11 @@ export default function Home() {
             setTargets(data.targets);
             setCoins(data.coins);
             setColor(data.color);
+            setPet(data.pet);
+            setAccessory(data.accessory)
             setOwnedColors(data.ownedColors || ["green"]);
             setOwnedPets(data.ownedPets || [""]);
+            setOwnedAccessories(data.ownedAccessories || [""]);
         } catch (error) {
             console.log(error);
         }
@@ -283,6 +295,7 @@ export default function Home() {
                     currentCalories={currentIntake.calories}
                     targetCalories={targets.calories}
                     pet={pet}
+                    accessory={accessory}
                 />
                 <NutrientsOverview
                     currentIntake={currentIntake}
@@ -318,6 +331,7 @@ export default function Home() {
                 onPurchase={handlePurchase}
                 ownedColors={ownedColors}
                 ownedPets={ownedPets}
+                ownedAccessories={ownedAccessories}
             />
             <CustomizeDrawer
                 isOpen={isCustomizeDrawerOpen}
@@ -327,6 +341,9 @@ export default function Home() {
                 ownedPets={ownedPets}
                 onPetUpdate={handlePetUpdate}
                 currentPet={pet}
+                onAccessoryUpdate={handleAccessoryUpdate}
+                currentAccessory={accessory}
+                ownedAccessories={ownedAccessories}
             />
             {session && (
                 <UserProfileDrawer

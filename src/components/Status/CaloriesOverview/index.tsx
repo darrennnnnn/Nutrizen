@@ -9,9 +9,20 @@ import purple from "../../../../public/character/purplegif.gif";
 import red from "../../../../public/character/redgif.gif";
 import white from "../../../../public/character/whitegif.gif";
 import yellow from "../../../../public/character/yellowgif.gif";
-import cat from "../../../../public/favpng_cat-pixel-art-pusheen.png";
-import dog from "../../../../public/Lovepik_com-380361703-pixel-style-cute-dog-pixel-art-cartoon-white.png";
-import fox from "../../../../public/fox.png";
+
+import Cat from "../../../../public/pets/newcat.png";
+import Bear from "../../../../public/pets/newbear.png";
+import Bunny from "../../../../public/pets/newbunny.png";
+import Dog from "../../../../public/pets/newdog.png";
+import Duck from "../../../../public/pets/newduck.png";
+import Frog from "../../../../public/pets/newfrog.png";
+import Fox from "../../../../public/pets/fox.png";
+
+import WitchHat from "../../../../public/accessories/witchhat(2).png";
+import StrawHat from "../../../../public/accessories/strawhat.png";
+import TopHat from "../../../../public/accessories/tophat.png";
+import ChefHat from "../../../../public/accessories/chefhat.png";
+
 import { ColorOptions } from "@/lib/types";
 
 interface CaloriesOverviewProps {
@@ -19,6 +30,7 @@ interface CaloriesOverviewProps {
     targetCalories: number;
     characterColor: string | ColorOptions;
     pet: string;
+    accessory: string;
 }
 
 const characterImage = {
@@ -39,6 +51,7 @@ export default function CaloriesOverview({
     targetCalories,
     characterColor,
     pet,
+    accessory,
 }: Readonly<CaloriesOverviewProps>) {
     const percentage = Math.min(100, (currentCalories / targetCalories) * 100);
     const strokeWidth = 20;
@@ -47,14 +60,25 @@ export default function CaloriesOverview({
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     const petImage = {
-        cat: cat,
-        dog: dog,
-        fox: fox,
+        cat: Cat,
+        dog: Dog,
+        fox: Fox,
+        bear: Bear,
+        bunny: Bunny,
+        duck: Duck,
+        frog: Frog,
+    };
+
+    const hatImage = {
+        witchhat: WitchHat,
+        strawhat: StrawHat,
+        tophat: TopHat,
+        chefhat: ChefHat,
     };
     return (
         <>
             <div className="relative flex-grow flex justify-center items-center pt-28">
-                <div className="relative">
+                <div className="relative ">
                     <Image
                         src={
                             characterColor
@@ -73,6 +97,13 @@ export default function CaloriesOverview({
                             src={petImage[pet as keyof typeof petImage]}
                             alt={pet}
                             className="position -bottom-10 -right-16 absolute h-40 w-40"
+                        />
+                    )}
+                    {accessory && (
+                        <Image
+                            src={hatImage[accessory as keyof typeof hatImage]}
+                            alt={pet}
+                            className="absolute bottom-36 "
                         />
                     )}
                 </div>
