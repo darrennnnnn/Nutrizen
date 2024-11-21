@@ -289,7 +289,7 @@ export default function Home() {
                 </div>
             )}
             <Header coins={coins} />
-            <div className="flex-grow overflow-y-auto m-3 flex flex-col justify-end items-center relative">
+            <div className="flex-grow overflow-y-auto m-3 flex flex-col justify-end items-center relative overflow-hidden">
                 <CaloriesOverview
                     characterColor={color}
                     currentCalories={currentIntake.calories}
