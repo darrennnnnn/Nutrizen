@@ -78,7 +78,7 @@ export default function CaloriesOverview({
     return (
         <>
             <div className="relative flex-grow flex justify-center items-center pt-28">
-                <div className="relative ">
+                <div className="relative">
                     <Image
                         src={
                             characterColor
@@ -88,22 +88,22 @@ export default function CaloriesOverview({
                                 : ""
                         }
                         alt="blob"
-                        height={250}
-                        width={250}
+                        height={200}
+                        width={200}
                         unoptimized
                     />{" "}
                     {pet && (
                         <Image
                             src={petImage[pet as keyof typeof petImage]}
                             alt={pet}
-                            className="position -bottom-10 -right-16 absolute h-40 w-40"
+                            className="position -bottom-10 -right-20 absolute h-40 w-40"
                         />
                     )}
                     {accessory && (
                         <Image
                             src={hatImage[accessory as keyof typeof hatImage]}
                             alt={pet}
-                            className="absolute bottom-36 "
+                            className="absolute bottom-28 "
                         />
                     )}
                 </div>
