@@ -276,6 +276,8 @@ export default function Home() {
         }
     };
 
+    console.log(process.env.VALIDATION)
+
     return (
         <div className="h-svh flex flex-col">
             {loading && (
